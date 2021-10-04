@@ -11,7 +11,7 @@ class Matrix
 {
 private:
     std::vector<std::vector<T>> mat;
-    std::vector<std::vector<T>> matT;
+    //std::vector<std::vector<T>> matT;
     int c;
     int r;
 
@@ -38,6 +38,12 @@ public:
     void funcToRow(std::function<double(double)> f, int i);
     void transpose();
     void print();
+
+    static std::vector<T> linspace(T start, T end, int num);
+    template <typename T>
+    friend std::ostream& operator<< (std::ostream& out, const Matrix<T>& m);
+    template <typename T>
+    friend std::ostream& operator<< (std::ostream& out, const std::vector<T>& vec);
 
     ~Matrix();
 };
@@ -76,6 +82,7 @@ Matrix<T>& Matrix<T>::operator= (const Matrix<T>& m)
 }
 
 
+
 template <typename T>
 int Matrix<T>::cols() const { return c; }
 
@@ -101,16 +108,7 @@ vector<vector<T>> Matrix<T>::get2DVector() const
     return mat;
 }
 
-template <typename T>
-void Matrix<T>::print()
-{
-    for (vector<T> vec : mat)
-    {
-        for (T el : vec)
-            cout << el << std::setw(10);
-        cout << '\n';
-    }
-}
+
 
 template <typename T>
 T& Matrix<T>::operator() (int i, int j)
@@ -152,6 +150,9 @@ Matrix<T> Matrix<T>::operator-(const Matrix<T>& m)
     return Matrix<T>(temp);
 }
 
+
+
+
 template<typename T>
 Matrix<T> Matrix<T>::Transpose()
 {
@@ -165,11 +166,14 @@ Matrix<T> Matrix<T>::Transpose()
 template<typename T>
 void Matrix<T>::transpose()
 {
-    matT = vector<vector<T>>(c, vector<T>(r));
+    Matrix<T> temp = *this;
     for (int i = 0; i < r; i++)
         for (int j = 0; j < c; j++)
-            mat[j][i] = mat[i][j];
+            mat[j][i] = temp(i,j);
 }
+
+
+
 
 template<typename T>
 void Matrix<T>::funcToCol(function<double(double)> f, int j)
@@ -184,6 +188,69 @@ void Matrix<T>::funcToRow(function<double(double)> f, int i)
 {
     for (int t = 0; t < c; t++)
         mat[i][t] = f(mat[i][t]);
+}
+
+template <typename T>
+static vector<T> Matrix<T>::linspace(T start, T end, int num)
+{
+    std::vector<double> linspaced;
+
+    double start = static_cast<double>(start);
+    double end = static_cast<double>(end);
+    double num = static_cast<double>(num);
+
+    if (num == 0) { return linspaced; }
+    if (num == 1)
+    {
+        linspaced.push_back(start);
+        return linspaced;
+    }
+
+    double delta = (end - start) / (num - 1);
+
+    for (int i = 0; i < num - 1; ++i)
+    {
+        linspaced.push_back(start + delta * i);
+    }
+    linspaced.push_back(end); 
+    return linspaced;
+}
+
+
+
+
+template <typename T>
+ostream& operator<< (ostream& out, const Matrix<T>& m)
+{
+    vector<vector<T>> mat = m.get2DVector();
+ 
+    for (vector<T> vec : mat)
+    {
+        for (T el : vec)
+            out << el << setw(10);
+        out << '\n';
+    }
+
+    return out;
+}
+
+template <typename T>
+ostream& operator<< (ostream& out, const vector<T>& vec)
+{
+    for (T el : vec)
+        out << el << '\n';
+    return out;
+}
+
+template <typename T>
+void Matrix<T>::print()
+{
+    for (vector<T> vec : mat)
+    {
+        for (T el : vec)
+            cout << el << std::setw(10);
+        cout << '\n';
+    }
 }
 
 template <typename T>

@@ -23,11 +23,9 @@ int main()
 
 	//mat = mat2;
 	mat2 = mat.Transpose();
+	//print(mat.col(1));
+	//mat.col(2) = vector<int>{ 1,1,1 };
 
-	mat.col(2) = vector<int>{ 1,1,1 };
-	//mat.transpose();
-
-	std::cout << '\n' << std::endl;
 
 	//mat.funcToRow(f, 2);
 
@@ -36,7 +34,9 @@ int main()
 	Matrix<int> mat3 = mat - mat2;
 
 
-	mat.print();
+	cout << mat.col(1);
+	mat.transpose();
+	cout << mat;
 
 	//cin >> input;
 }
