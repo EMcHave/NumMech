@@ -47,19 +47,20 @@ public:
     DE(double x, double t,
         condFunc stCond,
         condFunc leftCond, condFunc rightCond,
-        int Nx = 15, int Nt = 15);
+        int Nx, int Nt);
 
     MatrixXd GetU();
     xProp getX();
     tProp getT();
-    ToCVector ar_cast();
+    static ToCVector ar_cast(MatrixXd &m, VectorXd& xLin, VectorXd& tLin);
 
     virtual MatrixXd Explicit() = 0;
     virtual MatrixXd Implicit() = 0;
     virtual MatrixXd startMatrix();
 
     static VectorXd ThomasAlg(MatrixXd& M, VectorXd& V);
-    static void printVectorMatrix(matrix m);
+    friend std::ostream& operator<< (std::ostream& out, matrix& m);
+    //static void printVectorMatrix(matrix m);
 };
 
 class WaveDE : public DE
@@ -71,7 +72,7 @@ public:
     WaveDE(double x, double t, double c,
         condFunc stCond, condFunc stCondDer,
         condFunc leftCond, condFunc rightCond,
-        int Nx = 25, int Nt = 25);
+        int Nx = 25, int Nt = 100);
 
     MatrixXd startMatrix() override;
     MatrixXd Explicit() override;

@@ -40,11 +40,11 @@ tProp DE::getT() {
 
 MatrixXd DE::startMatrix()
 {
-    MatrixXd matU = MatrixXd::Zero(Nt, Nx);
-    matU.row(0) = xLin.unaryExpr(stCond);
-    matU.col(0) = tLin.unaryExpr(leftCond);
-    matU.col(Nx-1) = tLin.unaryExpr(rightCond);
-    return matU;
+    MatrixXd temp = MatrixXd::Zero(Nt, Nx);
+    temp.row(0) = xLin.unaryExpr(stCond);
+    temp.col(0) = tLin.unaryExpr(leftCond);
+    temp.col(Nx-1) = tLin.unaryExpr(rightCond);
+    return temp;
 }
 
 VectorXd DE::ThomasAlg(MatrixXd &M, VectorXd &V)
@@ -75,33 +75,36 @@ VectorXd DE::ThomasAlg(MatrixXd &M, VectorXd &V)
     return resVector;
 }
 
-ToCVector DE::ar_cast()
+ToCVector DE::ar_cast(MatrixXd &m, VectorXd &xLin, VectorXd& tLin)
 {
-    matrix x(matU.rows());
-    matrix t(matU.rows());
-    matrix u(matU.rows());
+    matrix x(m.rows());
+    matrix t(m.rows());
+    matrix u(m.rows());
 
-    for (int i = 0; i < Nt; i++)
+
+
+    for (int i = 0; i < tLin.size(); i++)
     {
-        t[i] = std::vector<double>(Nx, tLin(i));
-        x[i] = std::vector<double>(matU.cols());
+        t[i] = std::vector<double>(xLin.size(), tLin(i));
+        x[i] = std::vector<double>(m.cols());
         Map<RowVectorXd>(&x[i][0], 1, xLin.size()) = xLin;
-        u[i] = std::vector<double>(matU.cols());
-        Map<RowVectorXd>(&u[i][0], 1, matU.cols()) = matU.row(i);
+        u[i] = std::vector<double>(m.cols());
+        Map<RowVectorXd>(&u[i][0], 1, m.cols()) = m.row(i);
     }
 
     return ToCVector{ x, t, u };
 }
 
-void DE::printVectorMatrix(matrix m)
+std::ostream& operator<<(std::ostream& out, matrix& m)
 {
     using namespace std;
     for (vector<double> vec : m)
     {
         for (double num : vec)
-            cout << num << ' ';
-        cout << '\n' << endl;
+            out << num << ' ';
+        out << '\n' << endl;
     }
+    return out;
 }
 
 
@@ -112,29 +115,31 @@ WaveDE::WaveDE(double x, double t, double c,
     condFunc stCond, condFunc stCondDer,
     condFunc leftCond, condFunc rightCond,
     int Nx, int Nt)
-    :DE(x, t, stCond, leftCond, rightCond, Nx, Nt), c(c)
+    :DE(x, t, stCond, leftCond, rightCond, Nx, Nt)
 {
-    this->dt = 0.1 * dx / c;
+    this->c = c;
     this->stCondDer = stCondDer;
-    matU = startMatrix();
+
 }
 
-MatrixXd WaveDE::startMatrix() 
+MatrixXd WaveDE::startMatrix()
 {
-    matU = DE::startMatrix();
-    DE::startMatrix();
+    MatrixXd temp = DE::startMatrix();
     VectorXd xLin = VectorXd::LinSpaced(Nx, 0, x);
     double coef = pow(c * dt / dx, 2);
     for (int i = 1; i < Nx - 1; i++)
-        matU(1, i) = stCond(xLin(i)) + dt * stCondDer(xLin(i)) + 0.5*coef * (matU(0, i+1) - 2 * matU(0, i) + matU(0, i-1));
+        temp(1, i) = stCond(xLin(i)) + dt * stCondDer(xLin(i)) + 0.5*coef * (temp(0, i+1) - 2 * temp(0, i) + temp(0, i-1));
 
-    return matU;
+    return temp;
 }
 
 MatrixXd WaveDE::Explicit()
 {
-        
-    double coef = pow(c * dt / dx, 2);
+    matU = WaveDE::startMatrix();
+    double coef = (c * dt / dx) * (c * dt / dx);
+    
+    //std::cout << dx <<'\n'<< dt << '\n' << c << '\n' << coef;
+
 
     for (int k = 1; k < Nt-1; k++)
         for (int i = 1; i < Nx-1; i++)
@@ -146,7 +151,9 @@ MatrixXd WaveDE::Explicit()
 }
 
 MatrixXd WaveDE::Implicit()
-{
+{;
+    matU = WaveDE::startMatrix();
+    
     MatrixXd M = MatrixXd::Zero(Nx, Nx);
     M(0, 0) = -1;
     M(Nx - 1, Nx - 1) = -1;
