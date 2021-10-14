@@ -11,54 +11,58 @@ using condFunc = std::function<double(double)>;
 using matrix = std::vector<std::vector<double>>;
 
 struct ToCVector {
-    matrix xAr;
-    matrix tAr;
+    matrix v1Ar;
+    matrix v2Ar;
     matrix uAr;
 };
 
-struct xProp {
+struct coordProp {
     double x;
     int Nx;
     VectorXd xLin;
 };
 
-struct tProp {
-    double t;
-    int Nt;
-    VectorXd tLin;
-};
+
+
 class DE
 {
 protected:
     double x;
+    double y;
     double t;
     int Nx;
+    int Ny;
     int Nt;
     double dx;
+    double dy;
     double dt;
+
     condFunc stCond;
     condFunc leftCond;
     condFunc rightCond;
-    MatrixXd matU;
+    condFunc y1Cond;
+    condFunc y2Cond;
+
     VectorXd xLin;
     VectorXd tLin;
+    VectorXd yLin;
+
+    MatrixXd matU;
 
 public:
-    DE(double x, double t,
-        condFunc stCond,
+    DE(double x,
         condFunc leftCond, condFunc rightCond,
-        int Nx, int Nt);
+        int Nx);
 
     MatrixXd GetU();
-    xProp getX();
-    tProp getT();
-    static ToCVector ar_cast(MatrixXd &m, VectorXd& xLin, VectorXd& tLin);
-
-    virtual MatrixXd Explicit() = 0;
-    virtual MatrixXd Implicit() = 0;
+    coordProp getX();
+    coordProp getY();
+    coordProp getT();
+    
     virtual MatrixXd startMatrix();
 
     static VectorXd ThomasAlg(MatrixXd& M, VectorXd& V);
+    static ToCVector ar_cast(MatrixXd& m, VectorXd& Lin1, VectorXd& tLin2);
     friend std::ostream& operator<< (std::ostream& out, matrix& m);
     //static void printVectorMatrix(matrix m);
 };
@@ -75,8 +79,21 @@ public:
         int Nx = 25, int Nt = 100);
 
     MatrixXd startMatrix() override;
-    MatrixXd Explicit() override;
-    MatrixXd Implicit() override;
+    MatrixXd Explicit();
+    MatrixXd Implicit();
 
+};
+
+class LaplasDE : public DE
+{
+public:
+    LaplasDE(double x, double y,
+        condFunc leftCond, condFunc rightCond,
+        condFunc y1Cond, condFunc y2Cond,
+        int Nx, int Ny);
+
+    MatrixXd startMatrix() override;
+    MatrixXd Solution(double eps, double omega);
+    double calcChart(int i, int j);
 };
 
