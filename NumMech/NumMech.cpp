@@ -194,29 +194,41 @@ LaplasDE::LaplasDE(double x, double y, condFunc leftCond, condFunc rightCond, co
 
 }
 
-MatrixXd LaplasDE::Solution(double eps, double omega)
+MatrixXd LaplasDE::Solution(double eps, double omega, int& k)
 {
     matU = startMatrix();
-    
-    for(int i = 1; i < Nx - 1; i++)
-        for (int j = 1; j < Ny - 1; j++)
-        {
-            matU(i, j) = calcChart(i, j);
-        }
-    MatrixXd matU1 = matU;
     MatrixXd temp;
     do {
         temp = matU;
+
         for (int i = 1; i < Nx - 1; i++)
             for (int j = 1; j < Ny - 1; j++)
             {
-                matU1(i, j) = matU(i, j) + omega*(calcChart(i, j) - matU(i, j));
+                matU(i, j) = matU(i, j) + omega * (calcChart(i, j) - matU(i, j));
             }
-        matU = matU1;
-    } while ((temp - matU1).lpNorm<Infinity>() > eps);
+        k++;
+    } while ((matU - temp).lpNorm<Infinity>() > eps);
 
-    return matU1;
+    return matU;
 }
+
+
+matrix LaplasDE::k_from_omega()
+{
+    matrix temp(2);
+    double omega = 0.1;
+    while (omega < 2)
+    {
+        int k = 0;
+        
+        Solution(pow(10, -12), omega, k);
+        temp[0].push_back(omega);
+        temp[1].push_back(k);
+        omega += 0.1;
+    }
+    return temp;
+}
+
 
 double LaplasDE::calcChart(int i, int j)
 {

@@ -10,6 +10,7 @@ namespace plt = matplotlibcpp;
 int main()
 {
     using namespace std;
+    int k = 0;
     function y1Cond{
         [](double x) { return 10 * x * x * (1 - x); }
     };
@@ -26,13 +27,13 @@ int main()
         [](double y) {return 0; }
     };
 
-    LaplasDE* de = new LaplasDE(1, 1, leftCond, rightCond, y1Cond, y2Cond, 20, 20);
+    LaplasDE* de = new LaplasDE(1, 1, leftCond, rightCond, y1Cond, y2Cond, 10, 10);
 
     VectorXd xLin = de->getX().xLin;
     VectorXd yLin = de->getY().xLin;
 
-    MatrixXd result = de->Solution(pow(10, -8), 1);
-
+    MatrixXd result = de->Solution(pow(10, -10), 1.5, k);
+    matrix k_omega = de->k_from_omega();
 
     ToCVector forPlot = DE::ar_cast(result, xLin, yLin);
 
@@ -47,18 +48,24 @@ int main()
     plt::set_zlabel("T");
     plt::show();
     
-    /*
-    plt::named_plot("First moment", forPlot.xAr[0], forPlot.uAr[0]);
-    plt::named_plot("Second moment", forPlot.xAr[0], forPlot.uAr[15]);
-    plt::named_plot("Third moment", forPlot.xAr[0], forPlot.uAr[45]);
+    plt::named_plot("First moment", forPlot.v1Ar[0], forPlot.uAr[0]);
+    plt::named_plot("Second moment", forPlot.v1Ar[0], forPlot.uAr[5]);
+    plt::named_plot("Third moment", forPlot.v1Ar[0], forPlot.uAr[9]);
     plt::title("Diffrent moments");
     plt::xlabel("x");
     plt::ylabel("U");
     plt::grid(true);
     plt::legend();
-    //plt::set_zlabel("U");
     plt::show();
-    */
+    
+    plt::plot(k_omega[0], k_omega[1]);
+    plt::xlabel("Omega");
+    plt::ylabel("Iterations");
+    plt::grid(1);
+
+    plt::show();
+    
+   
     
     delete de;
     

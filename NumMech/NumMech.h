@@ -93,7 +93,8 @@ public:
         int Nx, int Ny);
 
     MatrixXd startMatrix() override;
-    MatrixXd Solution(double eps, double omega);
+    MatrixXd Solution(double eps, double omega, int& k);
+    matrix k_from_omega();
     double calcChart(int i, int j);
 };
 
