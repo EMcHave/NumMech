@@ -24,6 +24,8 @@ DE::DE(double x,
         xLin = VectorXd::LinSpaced(Nx, 0, x);
     }
 
+DE::~DE(){}
+
 MatrixXd DE::GetU() { return matU; }
 
 coordProp DE::getX() {
@@ -203,9 +205,7 @@ MatrixXd LaplasDE::Solution(double eps, double omega, int& k)
 
         for (int i = 1; i < Nx - 1; i++)
             for (int j = 1; j < Ny - 1; j++)
-            {
                 matU(i, j) = matU(i, j) + omega * (calcChart(i, j) - matU(i, j));
-            }
         k++;
     } while ((matU - temp).lpNorm<Infinity>() > eps);
 
@@ -217,6 +217,7 @@ matrix LaplasDE::k_from_omega()
 {
     matrix temp(2);
     double omega = 0.1;
+    int K = 0;
     while (omega < 2)
     {
         int k = 0;
@@ -225,7 +226,9 @@ matrix LaplasDE::k_from_omega()
         temp[0].push_back(omega);
         temp[1].push_back(k);
         omega += 0.1;
+        K += k;
     }
+    std::cout << K << std::endl;
     return temp;
 }
 
@@ -242,6 +245,67 @@ MatrixXd LaplasDE::startMatrix()
     temp.row(Ny - 1) = xLin.unaryExpr(y2Cond);
     temp.col(0) = yLin.unaryExpr(leftCond);
     temp.col(Nx - 1) = yLin.unaryExpr(rightCond);
+    return temp;
+}
+
+
+//////////////////////// BEelement /////////////////////////
+
+
+BEelement::BEelement(double x1, double x2): xl(x1), xr(x2), Nx(20)
+{
+    xMat = XMatrix();
+    aMat = AMatrix();
+    xLin = VectorXd::LinSpaced(Nx, xl, xr);
+}
+
+RowVector4d BEelement::NVector(double x)
+{
+    return PolyVector(x) * aMat;
+}
+
+std::vector<double> BEelement::getX()
+{
+    std::vector<double> temp;
+    for (size_t i = 0; i < xLin.size(); i++)
+        temp.push_back(xLin(i));
+    return temp;
+}
+
+RowVector4d BEelement::PolyVector(double x)
+{
+    return RowVector4d{1, x, x*x, x*x*x};
+}
+
+Matrix4d BEelement::XMatrix()
+{
+    Matrix4d temp;
+
+    temp << 1, xl, xl* xl, xl* xl* xl,
+            0, 1,  2 * xl, 3 * xl * xl,
+            1, xr, xr* xr, xr* xr* xr,
+            0, 1,  2 * xr, 3 * xr * xr;
+
+    return temp;
+}
+
+Matrix4d BEelement::AMatrix()
+{
+    return xMat.inverse();
+}
+
+std::vector<std::vector<double>> BEelement::forPlot()
+{
+    std::vector<std::vector<double>> temp(4);
+    for (size_t i = 0; i < xLin.size(); i++)
+    {
+        RowVector4d N = NVector(xLin(i));
+        temp.at(0).push_back(N(0));
+        temp.at(1).push_back(N(1));
+        temp.at(2).push_back(N(2));
+        temp.at(3).push_back(N(3));
+    }
+
     return temp;
 }
 

@@ -53,6 +53,7 @@ public:
     DE(double x,
         condFunc leftCond, condFunc rightCond,
         int Nx);
+    virtual ~DE();
 
     MatrixXd GetU();
     coordProp getX();
@@ -98,3 +99,23 @@ public:
     double calcChart(int i, int j);
 };
 
+class BEelement
+{
+private:
+    double xl;
+    double xr;
+    unsigned int Nx;
+    Matrix4d aMat;
+    Matrix4d xMat;
+    VectorXd xLin;
+
+    RowVector4d PolyVector(double x);
+    Matrix4d XMatrix();
+    Matrix4d AMatrix();
+public:
+    BEelement(double x1, double x2);
+    
+    RowVector4d NVector(double x);
+    std::vector<double> getX();
+    std::vector<std::vector<double>> forPlot();
+};
