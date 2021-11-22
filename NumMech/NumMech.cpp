@@ -1,8 +1,4 @@
 #pragma once
-
-#include <iostream>
-#include <algorithm>
-#include <math.h>
 #include "NumMech.h"
 
 
@@ -259,32 +255,14 @@ BEelement::BEelement(double x1, double x2): xl(x1), xr(x2), Nx(20)
     xLin = VectorXd::LinSpaced(Nx, xl, xr);
 }
 
-RowVector4d BEelement::NVector(double x)
-{
-    return PolyVector(x) * aMat;
-}
-
-std::vector<double> BEelement::getX()
-{
-    std::vector<double> temp;
-    for (size_t i = 0; i < xLin.size(); i++)
-        temp.push_back(xLin(i));
-    return temp;
-}
-
-RowVector4d BEelement::PolyVector(double x)
-{
-    return RowVector4d{1, x, x*x, x*x*x};
-}
-
 Matrix4d BEelement::XMatrix()
 {
     Matrix4d temp;
 
     temp << 1, xl, xl* xl, xl* xl* xl,
-            0, 1,  2 * xl, 3 * xl * xl,
-            1, xr, xr* xr, xr* xr* xr,
-            0, 1,  2 * xr, 3 * xr * xr;
+        0, 1, 2 * xl, 3 * xl * xl,
+        1, xr, xr* xr, xr* xr* xr,
+        0, 1, 2 * xr, 3 * xr * xr;
 
     return temp;
 }
@@ -294,12 +272,35 @@ Matrix4d BEelement::AMatrix()
     return xMat.inverse();
 }
 
+RowVector4d BEelement::PolyVector(double x)
+{
+    return RowVector4d{ 1, x, x * x, x * x * x };
+}
+
+RowVector4d BEelement::NVector(double x)
+{
+    return PolyVector(x) * aMat;
+}
+
+
+
+std::vector<double> BEelement::getX()
+{
+    std::vector<double> temp;
+    for (size_t i = 0; i < xLin.size(); i++)
+        temp.push_back(xLin(i));
+    return temp;
+}
+
 std::vector<std::vector<double>> BEelement::forPlot()
 {
+    std::ofstream out("funcForm.txt");
+
     std::vector<std::vector<double>> temp(4);
     for (size_t i = 0; i < xLin.size(); i++)
     {
         RowVector4d N = NVector(xLin(i));
+        out << std::setprecision(5) <<  N << '\n';
         temp.at(0).push_back(N(0));
         temp.at(1).push_back(N(1));
         temp.at(2).push_back(N(2));

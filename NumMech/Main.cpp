@@ -4,12 +4,25 @@
 #include <iomanip>
 #include <memory>
 #include "Eigen/Dense"
+#include "FEM.h"
 #include "NumMech.h"
 #include "matplotlibcpp.h"
 
 namespace plt = matplotlibcpp;
 using namespace std;
 
+int main()
+{
+    TrussFEM* truss = new TrussFEM("Truss.txt");
+    VectorXd displacements = truss->Solve();
+
+    cout << displacements;
+    
+    return 0;
+}
+
+
+/*
 int main()
 {
     double x1 = -1;
@@ -40,6 +53,8 @@ int main()
     plt::legend();
     plt::show();
 }
+*/
+
 
 /*
 int main()

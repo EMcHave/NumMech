@@ -132,6 +132,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Python\Lib\site-packages\numpy\core\include;C:\Python\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,8 +145,10 @@
   <ItemGroup>
     <ClCompile Include="NumMech.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="FEM.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FEM.h" />
     <ClInclude Include="NumMech.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

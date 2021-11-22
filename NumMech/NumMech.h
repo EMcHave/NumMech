@@ -2,6 +2,11 @@
 
 #include <vector>
 #include <functional>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cmath>
+#include <iomanip>
 #include "Eigen/Dense"
 #define M_PI 3.14159265358979323846
 
