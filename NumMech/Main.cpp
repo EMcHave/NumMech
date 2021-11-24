@@ -6,17 +6,24 @@
 #include "Eigen/Dense"
 #include "FEM.h"
 #include "NumMech.h"
-#include "matplotlibcpp.h"
+//#include "matplotlibcpp.h"
 
-namespace plt = matplotlibcpp;
+//namespace plt = matplotlibcpp;
 using namespace std;
 
 int main()
 {
     TrussFEM* truss = new TrussFEM("Truss.txt");
     VectorXd displacements = truss->Solve();
+    VectorXd defs = truss->Deformations();
+    VectorXd stresses = truss->Stresses();
+    VectorXd forces = truss->Forces();
 
-    cout << displacements;
+    cout << displacements << '\n' << endl;
+    cout << defs << '\n' << endl;
+    cout << stresses << '\n' << endl;
+    cout << forces << '\n' << endl;
+    delete truss;
     
     return 0;
 }

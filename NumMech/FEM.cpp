@@ -2,7 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include "FEM.h"
-
+using namespace std;
+using namespace Eigen;
 
 Element::Element(Node n1, Node n2, int id): node_i(n1), node_j(n2), Id(id)
 {
@@ -27,10 +28,10 @@ void Element::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			Eigen::Triplet<double> trplt11(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 0, K(2 * i + 0, 2 * j + 0));
-			Eigen::Triplet<double> trplt12(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 1, K(2 * i + 0, 2 * j + 1));
-			Eigen::Triplet<double> trplt21(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 0, K(2 * i + 1, 2 * j + 0));
-			Eigen::Triplet<double> trplt22(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 1, K(2 * i + 1, 2 * j + 1));
+			Triplet<double> trplt11(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 0, K(2 * i + 0, 2 * j + 0));
+			Triplet<double> trplt12(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 1, K(2 * i + 0, 2 * j + 1));
+			Triplet<double> trplt21(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 0, K(2 * i + 1, 2 * j + 0));
+			Triplet<double> trplt22(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 1, K(2 * i + 1, 2 * j + 1));
 
 			triplets.push_back(trplt11);
 			triplets.push_back(trplt12);
@@ -45,7 +46,6 @@ void TrussFEM::readfile(const char* path)
     string s;
     char c;
     ifstream inp(path);
-
 
     getline(inp, s);
     int i;
@@ -100,18 +100,17 @@ void TrussFEM::readfile(const char* path)
 
 VectorXd TrussFEM::Solve()
 {
-    using namespace std;
+
     vector<Element>::iterator it;
+
     for (it = elements.begin(); it != elements.end(); ++it)
     {
         it->CalculateStiffnessMatrix(triplets);
     }
-    K_global = Eigen::SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
+    VectorXd forces_column = VectorXd::Zero(2 * nodes.size());
     K_global.setFromTriplets(triplets.begin(), triplets.end());
     
     applyConstraints();
-    
-    forces_column = VectorXd::Zero(2 * nodes.size());
     
     for (vector<Force>::iterator it = forces.begin(); it != forces.end(); ++it)
     {
@@ -121,17 +120,46 @@ VectorXd TrussFEM::Solve()
 
     SimplicialLDLT<SparseMatrix<double>> solver(K_global);
 
-    VectorXd displacemnts = solver.solve(forces_column);
+    displacements = solver.solve(forces_column);
 
-    return displacemnts;
+    return displacements;
+}
+
+VectorXd TrussFEM::Deformations()
+{
+    defs = VectorXd(elements.size());
+    for (vector<Element>::iterator itEl = elements.begin(); itEl != elements.end(); ++itEl)
+    {
+        
+        double X1 = itEl->node_i.x + displacements(2*itEl->node_i.id);
+        double Y1 = itEl->node_i.y + displacements(2*itEl->node_i.id + 1);
+        double X2 = itEl->node_j.x + displacements(2*itEl->node_j.id);
+        double Y2 = itEl->node_j.y + displacements(2*itEl->node_j.id + 1);
+        double newLength = sqrt((X2-X1)* (X2 - X1) + (Y2-Y1) * (Y2 - Y1));
+        defs(itEl->Id) = (newLength - itEl->length) / itEl->length;
+    }
+    return defs;
+}
+
+VectorXd TrussFEM::Stresses()
+{
+    stresses = defs * 2 * pow(10, 11);
+    return stresses;
+}
+
+VectorXd TrussFEM::Forces()
+{
+    forces_in_truss = stresses * 0.0001;
+    return forces_in_truss;
 }
 
 TrussFEM::TrussFEM(const char* path)
 {
     readfile(path);
+    K_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
 }
 
-void TrussFEM::setConstraints(Eigen::SparseMatrix<double>::InnerIterator& it, int index)
+void TrussFEM::setConstraints(SparseMatrix<double>::InnerIterator& it, int index)
 {
     if (it.row() == index || it.col() == index)
     {

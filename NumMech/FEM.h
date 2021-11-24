@@ -34,16 +34,16 @@ struct Force
 class Element
 {
 private:
-	const double E = pow(2, 11);
+	const double E = 2*pow(10, 11);
 	const double P = 0.3;
 	const double A = 0.0001;
 
+	array<int, 2> nodesIds;
+public:
 	Node node_i;
 	Node node_j;
 	int Id;
 	double length;
-	array<int, 2> nodesIds;
-public:
 	Element(Node, Node, int);
 	void CalculateStiffnessMatrix(vector<Triplet<double>>&);
 };
@@ -55,11 +55,15 @@ private:
 	vector<Node> nodes;
 	vector<Constraint> constraints;
 	vector<Force> forces;
-	VectorXd forces_column;
+	
 
 	SparseMatrix<double> K_global;
-
 	vector<Triplet<double>> triplets;
+
+	VectorXd displacements;
+	VectorXd defs;
+	VectorXd stresses;
+	VectorXd forces_in_truss;
 
 	void readfile(const char*);
 	void setConstraints(Eigen::SparseMatrix<double>::InnerIterator&, int);
@@ -67,7 +71,9 @@ private:
 public:
 	TrussFEM(const char*);
 	VectorXd Solve();
+	VectorXd Deformations();
 	VectorXd Stresses();
+	VectorXd Forces();
 
 
 };
