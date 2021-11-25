@@ -51,7 +51,6 @@ public:
 class TrussFEM
 {
 private:
-
 	vector<Constraint> constraints;
 	vector<Force> forces;
 
@@ -69,6 +68,7 @@ private:
 public:
 	vector<Element> elements;
 	vector<Node> nodes;
+
 	TrussFEM(const char*);
 	VectorXd Solve();
 	VectorXd Deformations();

@@ -20,6 +20,11 @@ int main()
     VectorXd forces = truss->Forces();
 
     ofstream VTK("Truss.vtk");
+    ofstream difF("difF.txt");
+    ofstream difU("difU.txt");
+    ifstream abaqusF("forces.txt");
+    ifstream abaqusU("disps.txt");
+
     VTK << "# vtk DataFile Version 1.0" << '\n' << "3D triangulation data" << '\n' << "ASCII" << "\n\n"
         << "DATASET POLYDATA" << '\n' << "POINTS " << truss->nodes.size() << " float" << endl;
 
@@ -60,6 +65,22 @@ int main()
     {
         VTK << fixed << forces(i) << endl;
     }
+
+    VectorXd abaqU(displacements.size()), abaqF(forces.size());
+    int n,m, k;
+    k = 0;
+    while (!abaqusF.eof())
+    {
+        abaqusF >> n >> m >> abaqF(k++);
+    }
+    k = 0;
+    while (!abaqusU.eof())
+    {
+        abaqusU >> n >> abaqU(k++) >> abaqU(k++);
+    }
+    
+    difF << "Difference in forces\n" << abaqF - forces << endl;
+    difU << "Difference in displacements\n" << abaqU - displacements << endl;
 
     delete truss;
     
