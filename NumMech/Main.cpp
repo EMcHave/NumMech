@@ -19,10 +19,48 @@ int main()
     VectorXd stresses = truss->Stresses();
     VectorXd forces = truss->Forces();
 
-    cout << displacements << '\n' << endl;
-    cout << defs << '\n' << endl;
-    cout << stresses << '\n' << endl;
-    cout << forces << '\n' << endl;
+    ofstream VTK("Truss.vtk");
+    VTK << "# vtk DataFile Version 1.0" << '\n' << "3D triangulation data" << '\n' << "ASCII" << "\n\n"
+        << "DATASET POLYDATA" << '\n' << "POINTS " << truss->nodes.size() << " float" << endl;
+
+    for (const Node& n : truss->nodes)
+    {
+        VTK << n.x << ' ' << n.y << ' ' << 0 << endl;
+    }
+
+    VTK << "LINES " << truss->elements.size() << ' ' << 3 * truss->elements.size() << endl;
+
+    for (const Element& n : truss->elements)
+    {
+        VTK << 2 << '\t' << n.node_i.id << '\t' << n.node_j.id << endl;
+    }
+    
+    VTK << "POINT_DATA " << truss->nodes.size() << endl;
+    VTK << "VECTORS Displacements float" << endl;
+
+    for (size_t i = 0; i < displacements.size(); i += 2)
+    {
+        VTK << displacements(i) << ' ' << displacements(i + 1) << ' ' << 0 << endl;
+    }
+    VTK << "CELL_DATA " << truss->elements.size() << endl;
+    VTK << "SCALARS Stresses float 1" << '\n' << "LOOKUP_TABLE default" << endl;
+    for (size_t i = 0; i < stresses.size(); i++)
+    {
+        VTK << fixed <<  stresses(i) << endl;
+    }
+
+    VTK << "SCALARS Deformations float 1" << '\n' << "LOOKUP_TABLE default" << endl;
+    for (size_t i = 0; i < defs.size(); i++)
+    {
+        VTK << fixed << defs(i) << endl;
+    }
+
+    VTK << "SCALARS Forces float 1" << '\n' << "LOOKUP_TABLE default" << endl;
+    for (size_t i = 0; i < forces.size(); i++)
+    {
+        VTK << fixed << forces(i) << endl;
+    }
+
     delete truss;
     
     return 0;

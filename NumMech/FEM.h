@@ -51,11 +51,9 @@ public:
 class TrussFEM
 {
 private:
-	vector<Element> elements;
-	vector<Node> nodes;
+
 	vector<Constraint> constraints;
 	vector<Force> forces;
-	
 
 	SparseMatrix<double> K_global;
 	vector<Triplet<double>> triplets;
@@ -69,11 +67,11 @@ private:
 	void setConstraints(Eigen::SparseMatrix<double>::InnerIterator&, int);
 	void applyConstraints();
 public:
+	vector<Element> elements;
+	vector<Node> nodes;
 	TrussFEM(const char*);
 	VectorXd Solve();
 	VectorXd Deformations();
 	VectorXd Stresses();
 	VectorXd Forces();
-
-
 };
