@@ -28,15 +28,10 @@ void Element::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			Triplet<double> trplt11(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 0, K(2 * i + 0, 2 * j + 0));
-			Triplet<double> trplt12(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 1, K(2 * i + 0, 2 * j + 1));
-			Triplet<double> trplt21(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 0, K(2 * i + 1, 2 * j + 0));
-			Triplet<double> trplt22(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 1, K(2 * i + 1, 2 * j + 1));
-
-			triplets.push_back(trplt11);
-			triplets.push_back(trplt12);
-			triplets.push_back(trplt21);
-			triplets.push_back(trplt22);
+			triplets.push_back(Triplet<double>(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 0, K(2 * i + 0, 2 * j + 0)));
+			triplets.push_back(Triplet<double>(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 1, K(2 * i + 0, 2 * j + 1)));
+			triplets.push_back(Triplet<double>(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 0, K(2 * i + 1, 2 * j + 0)));
+			triplets.push_back(Triplet<double>(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 1, K(2 * i + 1, 2 * j + 1)));
 		}
 	}
 }
@@ -77,7 +72,7 @@ void TrussFEM::readfile(const char* path)
     {
         Constraint newCon;
         inp >> i >> c >> newCon.x >> c >> newCon.y;
-        newCon.node_id = i - 1; 
+        newCon.node_id = i; 
         inp.get();
         auto oldpos = inp.tellg();
         getline(inp, s);
@@ -89,7 +84,7 @@ void TrussFEM::readfile(const char* path)
     {
         Force newF;
         inp >> i >> c >> newF.fx >> c >> newF.fy;
-        newF.node_id = i - 1;
+        newF.node_id = i;
         inp.get();
         auto oldpos = inp.tellg();
         getline(inp, s);
@@ -100,14 +95,13 @@ void TrussFEM::readfile(const char* path)
 
 VectorXd TrussFEM::Solve()
 {
-
     vector<Element>::iterator it;
 
     for (it = elements.begin(); it != elements.end(); ++it)
     {
         it->CalculateStiffnessMatrix(triplets);
     }
-    VectorXd forces_column = VectorXd::Zero(2 * nodes.size());
+
     K_global.setFromTriplets(triplets.begin(), triplets.end());
     
     applyConstraints();
@@ -130,7 +124,6 @@ VectorXd TrussFEM::Deformations()
     defs = VectorXd(elements.size());
     for (vector<Element>::iterator itEl = elements.begin(); itEl != elements.end(); ++itEl)
     {
-        
         double X1 = itEl->node_i.x + displacements(2*itEl->node_i.id);
         double Y1 = itEl->node_i.y + displacements(2*itEl->node_i.id + 1);
         double X2 = itEl->node_j.x + displacements(2*itEl->node_j.id);
@@ -157,6 +150,7 @@ TrussFEM::TrussFEM(const char* path)
 {
     readfile(path);
     K_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
+    forces_column = VectorXd::Zero(2 * nodes.size());
 }
 
 void TrussFEM::setConstraints(SparseMatrix<double>::InnerIterator& it, int index)

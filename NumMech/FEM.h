@@ -61,6 +61,7 @@ private:
 	VectorXd defs;
 	VectorXd stresses;
 	VectorXd forces_in_truss;
+	VectorXd forces_column;
 
 	void readfile(const char*);
 	void setConstraints(Eigen::SparseMatrix<double>::InnerIterator&, int);
@@ -68,6 +69,8 @@ private:
 public:
 	vector<Element> elements;
 	vector<Node> nodes;
+
+
 
 	TrussFEM(const char*);
 	VectorXd Solve();

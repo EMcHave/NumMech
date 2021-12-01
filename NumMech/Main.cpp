@@ -24,9 +24,11 @@ int main()
     ofstream difU("difU.txt");
     ifstream abaqusF("forces.txt");
     ifstream abaqusU("disps.txt");
+    ofstream U("dispTable.txt");
+    ofstream F("forceTable.txt");
 
-    VTK << "# vtk DataFile Version 1.0" << '\n' << "3D triangulation data" << '\n' << "ASCII" << "\n\n"
-        << "DATASET POLYDATA" << '\n' << "POINTS " << truss->nodes.size() << " float" << endl;
+    VTK << "# vtk DataFile Version 1.0\n3D triangulation data\n" 
+        << "ASCII\n\nDATASET POLYDATA\nPOINTS " << truss->nodes.size() << " float" << endl;
 
     for (const Node& n : truss->nodes)
     {
@@ -46,25 +48,19 @@ int main()
     for (size_t i = 0; i < displacements.size(); i += 2)
     {
         VTK << displacements(i) << ' ' << displacements(i + 1) << ' ' << 0 << endl;
+        U << i + 1  << '\t' << displacements(i) << setw(10) << '\t' << displacements(i + 1) << endl;
     }
     VTK << "CELL_DATA " << truss->elements.size() << endl;
-    VTK << "SCALARS Stresses float 1" << '\n' << "LOOKUP_TABLE default" << endl;
-    for (size_t i = 0; i < stresses.size(); i++)
-    {
-        VTK << fixed <<  stresses(i) << endl;
-    }
 
-    VTK << "SCALARS Deformations float 1" << '\n' << "LOOKUP_TABLE default" << endl;
-    for (size_t i = 0; i < defs.size(); i++)
-    {
-        VTK << fixed << defs(i) << endl;
-    }
-
-    VTK << "SCALARS Forces float 1" << '\n' << "LOOKUP_TABLE default" << endl;
+    VTK << "SCALARS Forces float 1\nLOOKUP_TABLE default" << endl;
     for (size_t i = 0; i < forces.size(); i++)
     {
         VTK << fixed << forces(i) << endl;
+        F << i+1 << '\t' << forces(i) << endl;
     }
+
+
+
 
     VectorXd abaqU(displacements.size()), abaqF(forces.size());
     int n,m, k;
@@ -79,8 +75,11 @@ int main()
         abaqusU >> n >> abaqU(k++) >> abaqU(k++);
     }
     
+    for (size_t i = 0; i < forces.size(); i++)
+        difF << 'F' << i + 1 << '\t' << abaqF(i) - forces(i) << endl;
     difF << "Difference in forces\n" << abaqF - forces << endl;
     difU << "Difference in displacements\n" << abaqU - displacements << endl;
+
 
     delete truss;
     
