@@ -72,7 +72,7 @@ void TrussFEM::readfile(const char* path)
     {
         Constraint newCon;
         inp >> i >> c >> newCon.x >> c >> newCon.y;
-        newCon.node_id = i; 
+        newCon.node_id = i - 1; 
         inp.get();
         auto oldpos = inp.tellg();
         getline(inp, s);
@@ -84,7 +84,7 @@ void TrussFEM::readfile(const char* path)
     {
         Force newF;
         inp >> i >> c >> newF.fx >> c >> newF.fy;
-        newF.node_id = i;
+        newF.node_id = i - 1;
         inp.get();
         auto oldpos = inp.tellg();
         getline(inp, s);
@@ -112,7 +112,10 @@ VectorXd TrussFEM::Solve()
         forces_column(2 * it->node_id + 1) = it->fy;
     }
 
-    SimplicialLDLT<SparseMatrix<double>> solver(K_global);
+    ConjugateGradient<SparseMatrix<double>> solver;
+    solver.setTolerance(pow(10, -15));
+    solver.setMaxIterations(200);
+    solver.compute(K_global);
 
     displacements = solver.solve(forces_column);
 

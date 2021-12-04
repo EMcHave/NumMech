@@ -11,13 +11,15 @@
 //namespace plt = matplotlibcpp;
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
-    TrussFEM* truss = new TrussFEM("Truss.txt");
+    TrussFEM* truss = new TrussFEM(argv[1]);
     VectorXd displacements = truss->Solve();
     VectorXd defs = truss->Deformations();
     VectorXd stresses = truss->Stresses();
     VectorXd forces = truss->Forces();
+
+    cout << displacements << endl;
 
     ofstream VTK("Truss.vtk");
     ofstream difF("difF.txt");
@@ -59,9 +61,6 @@ int main()
         F << i+1 << '\t' << forces(i) << endl;
     }
 
-
-
-
     VectorXd abaqU(displacements.size()), abaqF(forces.size());
     int n,m, k;
     k = 0;
@@ -79,7 +78,6 @@ int main()
         difF << 'F' << i + 1 << '\t' << abaqF(i) - forces(i) << endl;
     difF << "Difference in forces\n" << abaqF - forces << endl;
     difU << "Difference in displacements\n" << abaqU - displacements << endl;
-
 
     delete truss;
     
