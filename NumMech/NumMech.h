@@ -82,7 +82,7 @@ public:
     WaveDE(double x, double t, double c,
         condFunc stCond, condFunc stCondDer,
         condFunc leftCond, condFunc rightCond,
-        int Nx = 25, int Nt = 100);
+        int Nx = 6, int Nt = 24);
 
     MatrixXd startMatrix() override;
     MatrixXd Explicit();

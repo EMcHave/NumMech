@@ -6,11 +6,37 @@
 #include "Eigen/Dense"
 #include "FEM.h"
 #include "NumMech.h"
-//#include "matplotlibcpp.h"
+#include "matplotlibcpp.h"
 
-//namespace plt = matplotlibcpp;
+namespace plt = matplotlibcpp;
 using namespace std;
 
+
+int main()
+{
+    float l = 2.4;
+    int n = 24;
+    vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{n, 1, 0} };
+    vector<Force> forces{ Force{ 6, -29419, 0 } };
+    BeamFEM* beam = new BeamFEM(l, n, cons, true, true, pair<int, int>{6, 11}, forces);
+    VectorXd disps = beam->Solve();
+    cout << disps << endl;
+
+    vector<float> X;
+    vector<float> Y;
+    for (int i = 0; i <= n; i++)
+        X.push_back(beam->nodes[i].x);
+    for(int i = 0; i < disps.size(); i+=2 )
+        Y.push_back(disps[i]);
+
+    plt::plot(X, Y);
+    plt::title("Bended beam");
+    plt::show();
+    delete beam;
+    return 0;
+}
+
+/*
 int main(int argc, char** argv)
 {
     TrussFEM* truss = new TrussFEM(argv[1]);
@@ -39,9 +65,10 @@ int main(int argc, char** argv)
 
     VTK << "LINES " << truss->elements.size() << ' ' << 3 * truss->elements.size() << endl;
 
-    for (const Element& n : truss->elements)
+    for (Element* n : truss->elements)
     {
-        VTK << 2 << '\t' << n.node_i.id << '\t' << n.node_j.id << endl;
+        TrussElement* N = dynamic_cast<TrussElement*>(n);
+        VTK << 2 << '\t' << N->node_i.id << '\t' << N->node_j.id << endl;
     }
     
     VTK << "POINT_DATA " << truss->nodes.size() << endl;
@@ -50,7 +77,7 @@ int main(int argc, char** argv)
     for (size_t i = 0; i < displacements.size(); i += 2)
     {
         VTK << displacements(i) << ' ' << displacements(i + 1) << ' ' << 0 << endl;
-        U << i + 1  << '\t' << displacements(i) << setw(10) << '\t' << displacements(i + 1) << endl;
+        U << i + 1  << '\t' << displacements(i) << '\t' << displacements(i + 1) << endl;
     }
     VTK << "CELL_DATA " << truss->elements.size() << endl;
 
@@ -83,9 +110,9 @@ int main(int argc, char** argv)
     
     return 0;
 }
+*/
 
-
-/*
+/* 4 lab
 int main()
 {
     double x1 = -1;
@@ -119,7 +146,7 @@ int main()
 */
 
 
-/*
+/* 3 lab
 int main()
 {
     using namespace std;
@@ -195,6 +222,70 @@ int main()
     
     delete de;
     
+    return 0;
+}
+*/
+
+
+/* 2 lab
+int main()
+{
+    using namespace std;
+    function stCond{
+        [](double x) { return (x + 0.2) * sin(M_PI * x / 2); }
+    };
+
+    function stCondDer{
+        [](double x) { return 1 + x * x; }
+    };
+
+    function leftCond{
+        [](double t) {return  0; }
+    };
+
+    function rightCond{
+        [](double t) {return 1.2*(t+1); }
+    };
+
+    WaveDE* de = new WaveDE(1, 0.5, 1, stCond, stCondDer, leftCond, rightCond, 6, 24);
+
+    VectorXd xLin = de->getX().xLin;
+    VectorXd tLin = de->getT().xLin;
+
+    MatrixXd resultIm = de->Implicit();
+    MatrixXd resultEx = de->Explicit();
+
+    MatrixXd dif = resultEx - resultIm;
+
+    ToCVector forPlot = DE::ar_cast(resultIm, xLin, tLin);
+
+    ofstream file("outTable.txt");
+
+    file << dif << endl;
+
+
+    plt::plot_surface(forPlot.v1Ar, forPlot.v2Ar, forPlot.uAr, std::map<string, string>{ {"cmap", "plasma"}});
+    plt::title("Implicit");
+    plt::xlabel("x");
+    plt::ylabel("t");
+    plt::set_zlabel("U");
+    plt::show();
+
+    /*
+    plt::named_plot("First moment", forPlot.xAr[0], forPlot.uAr[0]);
+    plt::named_plot("Second moment", forPlot.xAr[0], forPlot.uAr[15]);
+    plt::named_plot("Third moment", forPlot.xAr[0], forPlot.uAr[45]);
+    plt::title("Diffrent moments");
+    plt::xlabel("x");
+    plt::ylabel("U");
+    plt::grid(true);
+    plt::legend();
+    //plt::set_zlabel("U");
+    plt::show();
+    
+
+    delete de;
+
     return 0;
 }
 */
