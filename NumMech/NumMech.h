@@ -10,15 +10,18 @@
 #include "Eigen/Dense"
 #define M_PI 3.14159265358979323846
 
-using namespace Eigen;
+using Eigen::VectorXd;
+using Eigen::MatrixXd;
+using Eigen::Matrix4d;
+
 
 using condFunc = std::function<double(double)>;
-using matrix = std::vector<std::vector<double>>;
+using mat = std::vector<std::vector<double>>;
 
 struct ToCVector {
-    matrix v1Ar;
-    matrix v2Ar;
-    matrix uAr;
+    mat v1Ar;
+    mat v2Ar;
+    mat uAr;
 };
 
 struct coordProp {
@@ -69,7 +72,7 @@ public:
 
     static VectorXd ThomasAlg(MatrixXd& M, VectorXd& V);
     static ToCVector ar_cast(MatrixXd& m, VectorXd& Lin1, VectorXd& tLin2);
-    friend std::ostream& operator<< (std::ostream& out, matrix& m);
+    friend std::ostream& operator<< (std::ostream& out, mat& m);
     //static void printVectorMatrix(matrix m);
 };
 
@@ -100,7 +103,7 @@ public:
 
     MatrixXd startMatrix() override;
     MatrixXd Solution(double eps, double omega, int& k);
-    matrix k_from_omega();
+    mat k_from_omega();
     double calcChart(int i, int j);
 };
 
@@ -114,13 +117,13 @@ private:
     Matrix4d xMat;
     VectorXd xLin;
 
-    RowVector4d PolyVector(double x);
+    Eigen::RowVector4d PolyVector(double x);
     Matrix4d XMatrix();
     Matrix4d AMatrix();
 public:
     BEelement(double x1, double x2);
     
-    RowVector4d NVector(double x);
+    Eigen::RowVector4d NVector(double x);
     std::vector<double> getX();
     std::vector<std::vector<double>> forPlot();
 };

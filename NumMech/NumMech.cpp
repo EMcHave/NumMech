@@ -5,7 +5,6 @@
 using condFunc = std::function<double(double)>;
 using matrix = std::vector<std::vector<double>>;
 
-using namespace Eigen;
 
 /*****************************DE BASE CLASS*****************************/
 
@@ -83,9 +82,9 @@ ToCVector DE::ar_cast(MatrixXd &m, VectorXd &Lin1, VectorXd& Lin2)
     {
         v2[i] = std::vector<double>(Lin1.size(), Lin2(i));
         v1[i] = std::vector<double>(m.cols());
-        Map<RowVectorXd>(&v1[i][0], 1, Lin1.size()) = Lin2;
+        Eigen::Map<Eigen::RowVectorXd>(&v1[i][0], 1, Lin1.size()) = Lin2;
         u[i] = std::vector<double>(m.cols());
-        Map<RowVectorXd>(&u[i][0], 1, m.cols()) = m.row(i);
+        Eigen::Map<Eigen::RowVectorXd>(&u[i][0], 1, m.cols()) = m.row(i);
     }
 
     return ToCVector{ v1, v2, u };
@@ -203,7 +202,7 @@ MatrixXd LaplasDE::Solution(double eps, double omega, int& k)
             for (int j = 1; j < Ny - 1; j++)
                 matU(i, j) = matU(i, j) + omega * (calcChart(i, j) - matU(i, j));
         k++;
-    } while ((matU - temp).lpNorm<Infinity>() > eps);
+    } while ((matU - temp).lpNorm<Eigen::Infinity>() > eps);
 
     return matU;
 }
@@ -272,12 +271,12 @@ Matrix4d BEelement::AMatrix()
     return xMat.inverse();
 }
 
-RowVector4d BEelement::PolyVector(double x)
+Eigen::RowVector4d BEelement::PolyVector(double x)
 {
-    return RowVector4d{ 1, x, x * x, x * x * x };
+    return Eigen::RowVector4d{ 1, x, x * x, x * x * x };
 }
 
-RowVector4d BEelement::NVector(double x)
+Eigen::RowVector4d BEelement::NVector(double x)
 {
     return PolyVector(x) * aMat;
 }
@@ -299,7 +298,7 @@ std::vector<std::vector<double>> BEelement::forPlot()
     std::vector<std::vector<double>> temp(4);
     for (size_t i = 0; i < xLin.size(); i++)
     {
-        RowVector4d N = NVector(xLin(i));
+        Eigen::RowVector4d N = NVector(xLin(i));
         out << std::setprecision(5) <<  N << '\n';
         temp.at(0).push_back(N(0));
         temp.at(1).push_back(N(1));

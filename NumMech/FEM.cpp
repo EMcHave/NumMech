@@ -2,9 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <set>
+#include "symbolicc++.h"
 #include "FEM.h"
+
 using namespace std;
-using namespace Eigen;
+
 
 TrussElement::TrussElement(Node n1, Node n2, int id): node_i(n1), node_j(n2)
 {
@@ -14,18 +16,26 @@ TrussElement::TrussElement(Node n1, Node n2, int id): node_i(n1), node_j(n2)
 	nodesIds.at(1) = n2.id;
 }
 
+TrussElement::~TrussElement()
+{
+}
+
 BeamElement::BeamElement(Node n1, Node n2, float l, int id) : node_i(n1), node_j(n2), length(l)
 {
     Id = id;
     nodesIds.at(0) = n1.id;
     nodesIds.at(1) = n2.id;
-    K << 12/(l*l), 6 / l, -12*(l*l), 6 / l,
+    K << 12/(l*l), 6 / l, -12/(l*l), 6 / l,
         6 / l, 4, -6 / l, 2,
         -12/(l*l), -6 / l, 12/(l*l), -6 / l,
         6 / l, 2, -6 / l, 4;
+    M << 156, 22 * l, 5 * S, -13 * l,
+        22 * l, 4 * l * l, 13 * l, -3 * l * l,
+        5 * S, 13 * l, 156, -22 * l,
+        -13 * l, -3 * l * l, -22 * l, 4 * l * l;
     K *= E * J / l;
+    M *= ro * S * l / 420;
 }
-
 
 BeamElement::~BeamElement()
 {
@@ -33,9 +43,9 @@ BeamElement::~BeamElement()
 
 void TrussElement::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
 {
-	Matrix2d B;
-	Matrix4d K;
-	Matrix<double, 2, 4> T;
+	Eigen::Matrix2d B;
+	Eigen::Matrix4d K;
+	Eigen::Matrix<double, 2, 4> T;
     //cout << Id << ' ' << node_i.x << ' '<< node_i.y << ' ' << node_j.x << ' ' << node_j.y << ' ' << length << endl;
 	B << 1, -1,
 		-1,  1;
@@ -55,6 +65,10 @@ void TrussElement::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
 	}
 }
 
+void TrussElement::CalculateMassMatrix(vector<Triplet<double>>&)
+{
+}
+
 void BeamElement::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
 {
     for (int i = 0; i < 2; i++)
@@ -69,10 +83,35 @@ void BeamElement::CalculateStiffnessMatrix(vector<Triplet<double>>& triplets)
     }
 }
 
-
-TrussElement::~TrussElement()
+void BeamElement::CalculateMassMatrix(vector<Triplet<double>> &triplets)
 {
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            triplets.push_back(Triplet<double>(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 0, M(2 * i + 0, 2 * j + 0)));
+            triplets.push_back(Triplet<double>(2 * nodesIds[i] + 0, 2 * nodesIds[j] + 1, M(2 * i + 0, 2 * j + 1)));
+            triplets.push_back(Triplet<double>(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 0, M(2 * i + 1, 2 * j + 0)));
+            triplets.push_back(Triplet<double>(2 * nodesIds[i] + 1, 2 * nodesIds[j] + 1, M(2 * i + 1, 2 * j + 1)));
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+TrussFEM::TrussFEM(const char* path)
+{
+    readfile(path);
+    K_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
+    forces_column = VectorXd::Zero(2 * nodes.size());
+}
+
 
 void TrussFEM::readfile(const char* path)
 {
@@ -150,7 +189,7 @@ VectorXd TrussFEM::Solve()
         forces_column(2 * it->node_id + 1) = it->fy;
     }
 
-    ConjugateGradient<SparseMatrix<double>> solver;
+    Eigen::ConjugateGradient<SparseMatrix<double>> solver;
     solver.setTolerance(pow(10, -15));
     solver.setMaxIterations(200);
     solver.compute(K_global);
@@ -192,12 +231,7 @@ TrussFEM::~TrussFEM()
 {
 }
 
-TrussFEM::TrussFEM(const char* path)
-{
-    readfile(path);
-    K_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
-    forces_column = VectorXd::Zero(2 * nodes.size());
-}
+
 
 void FEM::setConstraints(SparseMatrix<double>::InnerIterator& it, int index)
 {
@@ -225,6 +259,12 @@ void FEM::applyConstraints()
         for (SparseMatrix<double>::InnerIterator it(K_global, k); it; ++it)
             for (vector<int>::iterator idit = indicesToConstraint.begin(); idit != indicesToConstraint.end(); ++idit)
                 setConstraints(it, *idit);
+    
+    for (int k = 0; k < M_global.outerSize(); ++k)
+        for (SparseMatrix<double>::InnerIterator it(M_global, k); it; ++it)
+            for (vector<int>::iterator idit = indicesToConstraint.begin(); idit != indicesToConstraint.end(); ++idit)
+                setConstraints(it, *idit);
+                
 }
 
 Element::~Element()
@@ -233,32 +273,33 @@ Element::~Element()
 
 FEM::~FEM()
 {
-    for (auto* n : elements)
-        delete n;
 }
 
 BeamFEM::BeamFEM(float l, int n, vector<Constraint> cons, bool wf, bool qf, pair<int, int> sl, vector<Force> concF)
 {
+    qLength = sl;
     length = l;
     constraints = cons;
     forces = concF;
+
     float dx = l / n;
     for (int i = 0; i <= n; i++)
         nodes.push_back(Node{ i, i*dx, 0, 0 });
     for (int i = 0; i < n; i++)
         elements.push_back(new BeamElement(nodes.at(i), nodes.at(i + 1), dx, i));
+
     K_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
+    M_global = SparseMatrix<double>(2 * nodes.size(), 2 * nodes.size());
+
     surface_forces = VectorXd::Zero(2 * nodes.size());
     vol_forces = VectorXd::Zero(2 * nodes.size());
     conc_forces = VectorXd::Zero(2 * nodes.size());
-
-;
     
 
-    Vector4f v;
+    Eigen::Vector4f v;
     v << 1, dx / 6, 1, -dx / 6;
-    Vector4f vf = v * g * ro * S * dx / 2 * 0;
-    Vector4f sf = v * q * dx / 2 ;
+    Eigen::Vector4f vf = v * g * ro * S * dx / 2;
+    Eigen::Vector4f sf = v * q * dx / 2;
 
     for (Element* el : elements)
     {
@@ -266,18 +307,18 @@ BeamFEM::BeamFEM(float l, int n, vector<Constraint> cons, bool wf, bool qf, pair
         if (qf)
             if (E->Id >= sl.first && E->Id <= sl.second)
             {
-                surface_forces(2 * E->node_i.id) = sf(0);
-                surface_forces(2 * E->node_i.id + 1) = sf(1);
-                surface_forces(2 * E->node_j.id) = sf(2);
-                surface_forces(2 * E->node_j.id + 1) = sf(3);
+                surface_forces(2 * E->node_i.id) += sf(0);
+                surface_forces(2 * E->node_i.id + 1) += sf(1);
+                surface_forces(2 * E->node_j.id) += sf(2);
+                surface_forces(2 * E->node_j.id + 1) += sf(3);
             }
 
         if (wf)
         {
-            vol_forces(2 * E->node_i.id) = vf(0);
-            vol_forces(2 * E->node_i.id + 1) = vf(1);
-            vol_forces(2 * E->node_j.id) = vf(2);
-            vol_forces(2 * E->node_j.id + 1) = vf(3);
+            vol_forces(2 * E->node_i.id) += vf(0);
+            vol_forces(2 * E->node_i.id + 1) += vf(1);
+            vol_forces(2 * E->node_j.id) += vf(2);
+            vol_forces(2 * E->node_j.id + 1) += vf(3);
         }
     }
     for (vector<Force>::iterator it = forces.begin(); it != forces.end(); ++it)
@@ -289,7 +330,7 @@ BeamFEM::BeamFEM(float l, int n, vector<Constraint> cons, bool wf, bool qf, pair
     forces_column = surface_forces + vol_forces + conc_forces;
 }
 
-VectorXd BeamFEM::Solve()
+VectorXd BeamFEM::StaticSolve()
 {
     vector<Element*>::iterator it;
 
@@ -301,19 +342,155 @@ VectorXd BeamFEM::Solve()
     K_global.setFromTriplets(triplets.begin(), triplets.end());
     
     applyConstraints();
+    /*
+    ofstream mat("stiffness.txt");
+    mat << MatrixXd(K_global) << endl;   
+    */
 
-    ConjugateGradient<SparseMatrix<double>> solver;
+    //forces_column(2 * nodes.size() - 2) = 0.001;
+
+    Eigen::BiCGSTAB<SparseMatrix<double>> solver;
     solver.setTolerance(pow(10, -15));
     solver.setMaxIterations(200);
     solver.compute(K_global);
-
+    
     displacements = solver.solve(forces_column);
 
     return displacements;
 }
 
+vector<vector<VectorXd>> BeamFEM::DynamicSolve()
+{
+
+    int k = 20;
+    float t = 1;
+    float dt = t / k;
+
+    vector<vector<VectorXd>> solution;
+    vector<VectorXd> d2u(k);
+    vector<VectorXd> du(k);
+    vector<VectorXd> u(k);
+
+    u.at(0) = Eigen::VectorXd::Zero(2 * nodes.size());
+    du.at(0) = Eigen::VectorXd::Zero(2 * nodes.size());
+    d2u.at(0) = Eigen::VectorXd::Zero(2 * nodes.size());
+
+    vector<Element*>::iterator it;
+
+    for (it = elements.begin(); it != elements.end(); ++it)
+    {
+        (*it)->CalculateStiffnessMatrix(triplets);
+        (*it)->CalculateMassMatrix(Mtriplets);
+    }
+
+
+    K_global.setFromTriplets(triplets.begin(), triplets.end());
+    M_global.setFromTriplets(Mtriplets.begin(), Mtriplets.end());
+
+
+    applyConstraints();
+    
+    Eigen::BiCGSTAB<SparseMatrix<double>> explicit_solver;
+    explicit_solver.setTolerance(pow(10, -15));
+    explicit_solver.setMaxIterations(200);
+    explicit_solver.compute(M_global);
+
+    for (int i = 0; i < k-1; i++)
+    {
+        VectorXd R = BeamFEM::CurrentForce(i * dt, t) * forces_column - Eigen::MatrixXd(K_global) * u[i];
+        cout << R << endl;
+        d2u[i+1] = explicit_solver.solve(R);
+        du[i + 1] = du[i] + dt * d2u[i];
+        u[i + 1] = u[i] + dt * du[i+1];
+    }
+
+
+    solution.push_back(u);
+    solution.push_back(du);
+    solution.push_back(d2u);
+
+    return solution;
+}
+
+vector<pair<vector<double>, vector<double>>> BeamFEM::ContinuousFunctions()
+{ 
+    float l = length / elements.size();
+    Symbolic a("a");
+    Symbolic b("b");
+    Symbolic k("k");
+    Symbolic x("x");
+    Symbolic Kappa, dKappa, V, N;
+    VectorXd d = displacements;
+
+    vector<double> v_field;
+    vector<double> x_field;
+    vector<double> x2_field;
+    vector<double> M_field;
+    vector<double> Q_field;
+    
+    N = (1 / (Symbolic(l * l * l)) * (x - b) * (2 * x * x - b * x - 3 * a * x - b * (b - 3 * a)),
+        1 / (Symbolic(l * l)) * (x - a) * (x - b) * (x - b),
+        1 / (Symbolic(l * l * l)) * (x - a) * (-2 * x * x + a * x + 3 * b * x + a * (a - 3 * b)),
+            1 / (Symbolic(l * l)) * (x - b) * (x - a) * (x - a));
+        
+    Kappa = df(N, x, 2);
+    dKappa = df(N, x, 3);
+
+
+    for (int i = 0; i < elements.size(); i++)
+    {
+        BeamElement* el = dynamic_cast<BeamElement*>(elements[i]);
+        double A = el->node_i.x;
+        double B = el->node_j.x;
+        double E = el->E;
+        double J = el->J;
+        V = (Symbolic(d(2 * i)), Symbolic(d(2 * i + 1)), Symbolic(d(2 * i + 2)), Symbolic(d(2 * i + 3)));
+        Symbolic ABsubV = N[ a == A, b == B];
+        Symbolic ABsubM = Kappa[a == A, b == B];
+        Symbolic ABsubQ = dKappa[a == A, b == B];
+        Symbolic for_plotV = (V | ABsubV);
+        Symbolic for_plotM = (V | ABsubM);
+        Symbolic for_plotQ = (V | ABsubQ);
+        VectorXd X = VectorXd::LinSpaced(5, A , B);
+        for (int j = 0; j < X.size(); j++)
+        {
+            x_field.push_back(X(j));
+            v_field.push_back(for_plotV[x == X(j)]);
+            //M_field.push_back(-E*J*for_plotM[x == X(j)]);
+            //Q_field.push_back(-E*J*for_plotQ[x == X(j)]);
+        }
+
+        x2_field.push_back(A); 
+        M_field.push_back(-E * J * for_plotM[x == A]);
+        Q_field.push_back(-E * J * for_plotQ[x == A]);
+        
+        if (i == elements.size() - 1)
+        {
+            M_field.push_back(-E * J * for_plotM[x == B]);
+            Q_field.push_back(-E * J * for_plotQ[x == B]);
+            x2_field.push_back(B);
+        }
+            
+    }
+    
+    vector<pair<vector<double>, vector<double>>> res;
+    res.push_back(pair<vector<double>, vector<double>>(x_field, v_field));
+    res.push_back(pair<vector<double>, vector<double>>(x2_field, M_field));
+    res.push_back(pair<vector<double>, vector<double>>(x2_field, Q_field));
+    return res;
+}
+
 BeamFEM::~BeamFEM()
 {
+    for (Element* e : elements)
+        delete e;
+}
+
+float BeamFEM::CurrentForce(float t, float T)
+{
+    if (t <= T / 2)
+        return 2 * t;
+    else return 0;
 }
 
 

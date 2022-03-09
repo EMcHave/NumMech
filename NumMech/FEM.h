@@ -3,14 +3,18 @@
 #include <array>
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
+
 #include "Eigen/SparseCholesky"
 
 
 using namespace std;
-using namespace Eigen;
+using Eigen::VectorXd;
+using Eigen::Triplet;
+using Eigen::SparseMatrix;
 
 struct Node
 {
+	
 	int id;
 	double x;
 	double y;
@@ -37,6 +41,7 @@ class Element
 public:
 	int Id;
 	void virtual CalculateStiffnessMatrix(vector<Triplet<double>>&) = 0;
+	void virtual CalculateMassMatrix(vector<Triplet<double>>&) = 0;
 	virtual ~Element();
 };
 
@@ -54,22 +59,30 @@ public:
 	Node node_j;
 	double length;
 	void CalculateStiffnessMatrix(vector<Triplet<double>>&) override;
+	void CalculateMassMatrix(vector<Triplet<double>>&) override;
 	~TrussElement();
 };
 
 class BeamElement : public Element
 {
 private:
-	const double J = 5.027*pow(10, -9);
-	const double E = 2 * pow(10, 11);
-	Matrix4f K;
+
+	Eigen::Matrix4f K;
+	Eigen::Matrix4f M;
 	array<int, 2> nodesIds;
 public:
 	BeamElement(Node, Node, float, int);
+	const double J = 4.0 * pow(10, -5);
+	//double J = 5.09 * pow(10, -9);
+	const double E = 2 * pow(10, 11);
+	const float S = 0.0076;
+	//float S = 0.000144;
+	const float ro = 7900;
 	float length;
 	Node node_i;
 	Node node_j;
 	void CalculateStiffnessMatrix(vector<Triplet<double>>&) override;
+	void CalculateMassMatrix(vector<Triplet<double>>&) override;
 	~BeamElement();
 };
 
@@ -82,7 +95,9 @@ protected:
 
 	VectorXd forces_column;
 	SparseMatrix<double> K_global;
+	SparseMatrix<double> M_global;
 	vector<Triplet<double>> triplets;
+	vector<Triplet<double>> Mtriplets;
 
 	VectorXd displacements;
 	VectorXd defs;
@@ -116,20 +131,21 @@ public:
 class BeamFEM: public FEM
 {
 private:
-	const float g = -9.8;
-	const float q = -98066;
-	const float ro = 7700;
-	const float S = 1.6 * pow(10, -6);
+	const float g = -9.81;
+	const float q = -29420;
+	const float ro = 7900;
+	const float S = 0.0076;
 	float length;
 	VectorXd surface_forces;
 	VectorXd vol_forces;
 	VectorXd conc_forces;
+	pair<int, int> qLength;
 public:
 	BeamFEM(float l, int n, vector<Constraint>, bool wf, bool qf, pair<int, int>, vector<Force>);
-	VectorXd Solve();
-	VectorXd Deformations();
-	VectorXd Stresses();
-	VectorXd Forces();
+	VectorXd StaticSolve();
+	vector<vector<VectorXd>> DynamicSolve();
+	vector<pair<vector<double>, vector<double>>> ContinuousFunctions();
 	~BeamFEM();
 
+	static float CurrentForce(float t, float T);
 };
