@@ -5,13 +5,14 @@
 #include <memory>
 #include "Eigen/Dense"
 #include "FEM.h"
+#include "BeamFEM.h"
 #include "NumMech.h"
 #include "matplotlibcpp.h"
 
 namespace plt = matplotlibcpp;
 using namespace std;
 
-/*
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -31,29 +32,31 @@ int main()
 
     for (int i = 0; i <= n; i++)
         X.push_back(beam->nodes[i].x);
-    for (int i = 0; i < X.size(); i += 2)
+    for (int i = 0; i < dynSol.at(0).at(0).size(); i += 2)
     {
-        Y1.push_back(dynSol.at(0).at(1)[i]);
-        Y2.push_back(dynSol.at(0).at(4)[i]);
-        Y3.push_back(dynSol.at(0).at(8)[i]);
+        Y1.push_back(dynSol.at(2).at(100000)[i]);
+        Y2.push_back(dynSol.at(2).at(500001)[i]);
+        Y3.push_back(dynSol.at(2).at(900000)[i]);
     }
 
+
     plt::figure(0);
-    plt::plot(X, Y1);
-    plt::plot(X, Y2);
-    plt::plot(X, Y3);
+    plt::named_plot("t1", X, Y1);
+    plt::named_plot("t2", X, Y2);
+    plt::named_plot("t3", X, Y3);
     plt::grid(true);
+    plt::legend();
     plt::show();
 }
-*/
 
 
+/*
 int main()
 {
     setlocale(LC_ALL, "Russian");
     float l = 2;
     int n = 20;
-    vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{n, 1, 0} };
+    vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{3, 1, 0} };
     vector<Force> f{ Force{ 2, 0, 0 } };
     BeamFEM* beam = new BeamFEM(l, n, cons, true, true, pair<int, int>{5, 9}, f);
     
@@ -66,7 +69,7 @@ int main()
     vector<double> Y1;
     for (int i = 0; i <= n; i++)
         X.push_back(beam->nodes[i].x);
-    for(int i = 0; i < disps.size(); i+=2 )
+    for(int i = 0; i < disps.size(); i += 2 )
         Y.push_back(disps[i]);
     for (int i = 1; i < disps.size(); i += 2)
         Y1.push_back(disps[i]);
@@ -78,7 +81,7 @@ int main()
 
     ofstream dispsComp("dispsComp.txt"), anglesComp("anglesComp.txt"), forcesComp("beamforcesComp.txt"), momentsComp("beammomentsComp.txt");
 
-    ifstream dispsAb("beamdisp.txt"), forcesAb("forcesbeam.txt");
+    ifstream dispsAb("beamdispsBE.txt"), forcesAb("forcesbeam.txt");
 
     VectorXd dispV(k), anglesV(k), forcesV(k), momentsV(k), dispsCompV(k), forcesCompV(k), momentsCompV(k), dispsAbV(k), anglesAbV(k), forcesAbV(k), momentsAbV(k);
 
@@ -118,12 +121,13 @@ int main()
     momentsComp << -momentsV + momentsAbV;
     
     plt::figure(0);
-    plt::plot(X, Y);
+    plt::scatter(X, Y);
     plt::xlabel("X, m");
     plt::ylabel("Deflection, m");
     plt::title("Bended beam");
     plt::grid(true);
-
+    plt::show();
+    /*
     plt::figure(1);
     plt::plot(plot[0].first, plot[0].second);
     plt::xlabel("X, m");
@@ -150,7 +154,7 @@ int main()
 
     return 0;
 }
-
+*/
 
 
 /*
