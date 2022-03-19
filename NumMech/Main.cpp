@@ -15,7 +15,6 @@ using namespace std;
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
     float l = 2;
     int n = 20;
     vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{n, 1, 0} };
@@ -24,27 +23,38 @@ int main()
 
     vector<vector<VectorXd>> dynSol= beam->DynamicSolve();
 
-
-    vector<float> X;
-    vector<float> Y1;
-    vector<float> Y2;
-    vector<float> Y3;
+    vector<float> X, Y1, Y2, Y3;
 
     for (int i = 0; i <= n; i++)
         X.push_back(beam->nodes[i].x);
     for (int i = 0; i < dynSol.at(0).at(0).size(); i += 2)
     {
-        Y1.push_back(dynSol.at(2).at(100000)[i]);
-        Y2.push_back(dynSol.at(2).at(500001)[i]);
-        Y3.push_back(dynSol.at(2).at(900000)[i]);
+        Y1.push_back(dynSol.at(1).at(550000)[i]); //100, 550, 99
+        Y2.push_back(dynSol.at(1).at(700000)[i]); //250, 700, 250
+        Y3.push_back(dynSol.at(1).at(990000)[i]); //500, 990, 499
     }
+
+    int k = n + 1;
+
+    ofstream displacements("dyndispC++.txt"), velocities("velocitiesC++.txt"), accelerations("accelC++.txt");
+
+    //ofstream dispsComp("dispsComp.txt"), anglesComp("anglesComp.txt"), forcesComp("beamforcesComp.txt"), momentsComp("beammomentsComp.txt");
+
+    ifstream dispsAb("beamdispsBE.txt"), forcesAb("forcesbeam.txt");
+
+    VectorXd dispV(k), anglesV(k), forcesV(k), momentsV(k), dispsCompV(k), forcesCompV(k), momentsCompV(k), dispsAbV(k), anglesAbV(k), forcesAbV(k), momentsAbV(k);
+
+    VectorXd numbers = VectorXd::LinSpaced(n + 1, 1, n + 1);
 
 
     plt::figure(0);
-    plt::named_plot("t1", X, Y1);
-    plt::named_plot("t2", X, Y2);
-    plt::named_plot("t3", X, Y3);
+    plt::named_plot("t1 = 0.1 c", X, Y1, "r");
+    plt::named_plot("t2 = 0.25 c", X, Y2, "g");
+    plt::named_plot("t3 = 0.5 c", X, Y3, "b");
     plt::grid(true);
+    plt::xlabel("X, m");
+    plt::ylabel("U, m");
+    plt::title("Displacements");
     plt::legend();
     plt::show();
 }
