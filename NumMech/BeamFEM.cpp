@@ -143,11 +143,13 @@ BeamFEM::BeamFEM(float l, int n, vector<Constraint> cons, bool wf, bool qf, pair
     }
     for (vector<Force>::iterator it = forces.begin(); it != forces.end(); ++it)
     {
+        cout << 2 * it->node_id + 1 << ' ' << it->fy;
         conc_forces(2 * it->node_id) = it->fx;
         conc_forces(2 * it->node_id + 1) = it->fy;
     }
 
     forces_column = surface_forces + vol_forces + conc_forces;
+    cout << forces_column << endl;
 }
 
 VectorXd BeamFEM::StaticSolve()
@@ -163,14 +165,13 @@ VectorXd BeamFEM::StaticSolve()
 
     applyConstraints();
 
-    cout << Eigen::MatrixXd(K_global).determinant() << endl;
 
 
     //forces_column(2 * nodes.size() - 2) = 0.001;
 
-    Eigen::BiCGSTAB<SparseMatrix<double>> solver;
-    solver.setTolerance(pow(10, -15));
-    solver.setMaxIterations(200);
+    Eigen::SimplicialLDLT<SparseMatrix<double>> solver;
+    //solver.setTolerance(pow(10, -15));
+    //solver.setMaxIterations(200);
     solver.compute(K_global);
 
     displacements = solver.solve(forces_column);
@@ -206,6 +207,9 @@ vector<vector<VectorXd>> BeamFEM::DynamicSolve()
     M_global.setFromTriplets(Mtriplets.begin(), Mtriplets.end());
     applyConstraints();
 
+    ofstream massm("mass.txt");
+    massm << Eigen::MatrixXd(M_global) << endl;
+
     Eigen::SimplicialLDLT<SparseMatrix<double>> explicit_solver;
     explicit_solver.compute(1 / (dt * dt) * M_global);
     
@@ -218,6 +222,7 @@ vector<vector<VectorXd>> BeamFEM::DynamicSolve()
     {
         VectorXd R = BeamFEM::CurrentForce(i * dt, t) * forces_column - (Kd - 2/(dt*dt)*Md) * u[i] - (1/(dt*dt)*Md)*u[i-1];
         u[i+1] = explicit_solver.solve(R);
+        cout << u[i + 1] << endl;
         du[i] = 1 / (2 * dt) * (u[i + 1] - u[i - 1]);
         d2u[i] = 1 / (dt * dt) * (u[i + 1] - 2 * u[i] + u[i - 1]);
     }

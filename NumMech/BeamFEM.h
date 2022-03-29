@@ -11,11 +11,11 @@ private:
 public:
 	BeamElement(Node, Node, int);
 	const double J = 4.0 * pow(10, -5);
-	//double J = 5.09 * pow(10, -9);
+	//const double J = 0.00000163323;
 	const double E = 2 * pow(10, 11);
 	const float S = 0.0076;
-	//float S = 0.000144;
-	const float ro = 7900;
+	//const float S = 0.00099;
+	const float ro = 7700;
 	float length;
 	Node node_i;
 	Node node_j;
@@ -30,7 +30,7 @@ class BeamFEM : public FEM
 private:
 	const float g = -9.81;
 	const float q = -29420;
-	const float ro = 7900;
+	const float ro = 7700;
 	const float S = 0.0076;
 	float length;
 	VectorXd surface_forces;
