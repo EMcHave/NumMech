@@ -19,24 +19,24 @@
 19
 20
 21
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
+           0            0            0            0            0            0
+-0.000870844  -0.00088832 -0.000571461    -0.308833    -0.097901    0.0457839
+ -0.00328961  -0.00323405  -0.00212818     -1.25868     0.122848    -0.157922
+ -0.00694985   -0.0066148  -0.00444097     -2.14225     0.743722    -0.257188
+  -0.0115178    -0.010653  -0.00728108     -3.32402      2.45657    -0.618961
+  -0.0166512   -0.0150066   -0.0104168     -3.73025      4.19216     -1.92746
+  -0.0220365   -0.0193724   -0.0136158     -4.38273      6.62829     -3.54184
+  -0.0273763   -0.0234742   -0.0166818     -5.02043      8.83868     -5.22789
+  -0.0323099   -0.0270861   -0.0194365     -5.80475      10.0933     -6.18556
+  -0.0364567   -0.0299786   -0.0217209     -6.30538       11.836     -5.97785
+  -0.0394229   -0.0319223   -0.0233595     -6.94062      12.6497     -5.88758
+  -0.0408924   -0.0327309   -0.0241628     -7.79652      12.0011     -5.59876
+   -0.040806   -0.0324128   -0.0241367     -8.92656       10.615     -6.04048
+  -0.0392304   -0.0310383   -0.0233449     -9.79242      9.53873       -6.272
+   -0.036278   -0.0287016   -0.0218219     -9.59626      8.58281     -5.73553
+   -0.032123    -0.025479   -0.0195957     -8.95512      6.84276     -5.08369
+  -0.0269583   -0.0214608   -0.0166843     -8.71316      5.11487     -3.86556
+  -0.0209547   -0.0167705   -0.0131466     -7.07288      3.31238     -2.75584
+  -0.0143097   -0.0115311    -0.009088      -4.9041      1.49455     -1.78882
+ -0.00725123  -0.00588144  -0.00464818     -2.58136      0.56929     -1.00308
+           0            0            0            0            0            0

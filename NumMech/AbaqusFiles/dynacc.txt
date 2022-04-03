@@ -1,0 +1,291 @@
+********************************************************************************
+Field Output Report, written Sun Mar 20 12:29:22 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment    990: Step Time =   9.9000E-02
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2   -1.7968710E-01
+                3   -3.7819269E-01
+                4    0.0000000E+00
+                5   -2.7823891E-02
+                6   -5.9988342E-02
+                7   -9.6387111E-02
+                8   -1.3657701E-01
+                9   -2.2438033E-01
+               10   -2.6886865E-01
+               11   -3.1098005E-01
+               12   -3.4827310E-01
+               13   -3.9825669E-01
+               14   -4.0626135E-01
+               15   -4.0048942E-01
+               16   -3.7990284E-01
+               17   -3.4430131E-01
+               18   -2.9442847E-01
+               19   -2.3200947E-01
+               20   -1.5970974E-01
+               21   -8.1009649E-02
+
+
+  Minimum           -4.0626135E-01
+          At Node               14
+
+  Maximum            0.0000000E+00
+          At Node                4
+
+            Total   -4.7275272E+00
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment   2520: Step Time =   0.2520
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2    1.8105394E-01
+                3    1.6530725E-01
+                4    0.0000000E+00
+                5    4.4462871E-02
+                6    8.7154768E-02
+                7    1.2552011E-01
+                8    1.5737355E-01
+                9    1.9553863E-01
+               10    2.0050654E-01
+               11    1.9634327E-01
+               12    1.8408528E-01
+               13    1.4196189E-01
+               14    1.1618727E-01
+               15    9.0101279E-02
+               16    6.5604202E-02
+               17    4.4211186E-02
+               18    2.6932118E-02
+               19    1.4212401E-02
+               20    5.9404732E-03
+               21    1.5203384E-03
+
+
+  Minimum            0.0000000E+00
+          At Node                4
+
+  Maximum            2.0050654E-01
+          At Node               10
+
+            Total    2.0440174E+00
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment   4940: Step Time =   0.4940
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2    3.5089788E-01
+                3    4.1298401E-01
+                4    0.0000000E+00
+                5    7.9743125E-02
+                6    1.5831548E-01
+                7    2.3185739E-01
+                8    2.9696995E-01
+                9    3.9166194E-01
+               10    4.1813195E-01
+               11    4.3003628E-01
+               12    4.2790937E-01
+               13    3.8703993E-01
+               14    3.5222378E-01
+               15    3.1085831E-01
+               16    2.6525781E-01
+               17    2.1756852E-01
+               18    1.6964652E-01
+               19    1.2298461E-01
+               20    7.8692958E-02
+               21    3.7533026E-02
+
+
+  Minimum            0.0000000E+00
+          At Node                4
+
+  Maximum            4.3003628E-01
+          At Node               11
+
+            Total    5.1403128E+00
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment   5490: Step Time =   0.5490
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2    8.2075134E+01
+                3    1.5098775E+02
+                4    0.0000000E+00
+                5    1.0046769E+01
+                6    2.5550730E+01
+                7    4.4183056E+01
+                8    6.3655937E+01
+                9    9.8310249E+01
+               10    1.1223051E+02
+               11    1.2467651E+02
+               12    1.3710970E+02
+               13    1.6702051E+02
+               14    1.8453302E+02
+               15    2.0116470E+02
+               16    2.1305894E+02
+               17    2.1556142E+02
+               18    2.0428773E+02
+               19    1.7629073E+02
+               20    1.3100079E+02
+               21    7.0648315E+01
+
+
+  Minimum            0.0000000E+00
+          At Node                4
+
+  Maximum            2.1556142E+02
+          At Node               17
+
+            Total    2.4123925E+03
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment   6960: Step Time =   0.6960
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2   -1.8063338E+02
+                3   -1.9349251E+02
+                4    0.0000000E+00
+                5   -4.4021099E+01
+                6   -8.6208107E+01
+                7   -1.2417895E+02
+                8   -1.5606326E+02
+                9   -1.9733916E+02
+               10   -2.0625363E+02
+               11   -2.0794949E+02
+               12   -2.0333652E+02
+               13   -1.7951704E+02
+               14   -1.6242841E+02
+               15   -1.4311200E+02
+               16   -1.2231626E+02
+               17   -1.0068307E+02
+               18   -7.8793045E+01
+               19   -5.7207809E+01
+               20   -3.6495464E+01
+               21   -1.7234274E+01
+
+
+  Minimum           -2.0794949E+02
+          At Node               11
+
+  Maximum            0.0000000E+00
+          At Node                4
+
+            Total   -2.4972635E+03
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynaJob.odb
+   Step: Step-1
+   Frame: Increment   9890: Step Time =   0.9890
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+       Node Label             A.A2
+                            @Loc 1
+-----------------------------------
+                1    0.0000000E+00
+                2    8.7812965E+01
+                3    1.9965164E+02
+                4    0.0000000E+00
+                5    1.2734856E+01
+                6    2.7811697E+01
+                7    4.5414539E+01
+                8    6.5517662E+01
+                9    1.1166924E+02
+               10    1.3612852E+02
+               11    1.5994182E+02
+               12    1.8164241E+02
+               13    2.1240837E+02
+               14    2.1851062E+02
+               15    2.1685590E+02
+               16    2.0676622E+02
+               17    1.8808470E+02
+               18    1.6123282E+02
+               19    1.2722066E+02
+               20    8.7607803E+01
+               21    4.4415745E+01
+
+
+  Minimum            0.0000000E+00
+          At Node                4
+
+  Maximum            2.1851062E+02
+          At Node               14
+
+            Total    2.4914282E+03
+
+

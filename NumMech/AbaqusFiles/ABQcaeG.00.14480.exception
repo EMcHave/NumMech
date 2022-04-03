@@ -1,0 +1,39 @@
+<Description>
+   A</Description>
+
+<Details>
+   ABQcaeG.exe / rank 0 / thread 0  encountered an unhandled exception
+
+</Details>
+
+<Context>
+   UNKNOWN
+</Context>
+
+<Callstack>
+  1)  ntdll.dll                   memset                                  
+  2)  ntdll.dll                   RtlGetExtendedContextLength2            
+  3)  ntdll.dll                   RtlRaiseException                       
+  4)  KERNELBASE.dll              RaiseException                          
+  5)  VCRUNTIME140.dll            is_exception_typeof                     
+  6)  ntdll.dll                   RtlCaptureContext2                      
+  7)  ABQcaeG.exe               unknown                                 
+</Callstack>
+
+<Memory>
+   <Current>              93 MB </Current>
+   <Resident>            147 MB </Resident>
+   <Physical>          16303 MB </Physical>
+   <Limit>                 0 MB </Limit>
+   <Accessible>        16303 MB </Accessible>
+   <Allocator>            DL    </Allocator>
+</Memory>
+
+<Directories>
+  <current> C:\AbaqusFiles                 </current> 
+     <temp> C:\Users\mchav\AppData\Local\Temp </temp>
+</Directories>
+
+<Installation>
+</Installation>
+

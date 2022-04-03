@@ -143,13 +143,11 @@ BeamFEM::BeamFEM(float l, int n, vector<Constraint> cons, bool wf, bool qf, pair
     }
     for (vector<Force>::iterator it = forces.begin(); it != forces.end(); ++it)
     {
-        cout << 2 * it->node_id + 1 << ' ' << it->fy;
         conc_forces(2 * it->node_id) = it->fx;
         conc_forces(2 * it->node_id + 1) = it->fy;
     }
 
     forces_column = surface_forces + vol_forces + conc_forces;
-    cout << forces_column << endl;
 }
 
 VectorXd BeamFEM::StaticSolve()
@@ -222,7 +220,7 @@ vector<vector<VectorXd>> BeamFEM::DynamicSolve()
     {
         VectorXd R = BeamFEM::CurrentForce(i * dt, t) * forces_column - (Kd - 2/(dt*dt)*Md) * u[i] - (1/(dt*dt)*Md)*u[i-1];
         u[i+1] = explicit_solver.solve(R);
-        cout << u[i + 1] << endl;
+        //cout << u[i + 1] << endl;
         du[i] = 1 / (2 * dt) * (u[i + 1] - u[i - 1]);
         d2u[i] = 1 / (dt * dt) * (u[i + 1] - 2 * u[i] + u[i - 1]);
     }

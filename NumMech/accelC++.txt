@@ -19,24 +19,24 @@
 19
 20
 21
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
--nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind) -nan(ind)
+        0         0         0         0         0         0
+-0.920261 0.0627521 -0.166029   65204.7  -15333.8  -37737.1
+ -1.95871  -2.28939  -1.55914   46494.7   21331.6   23366.5
+ -3.56286  -6.48514  -3.34054  -44886.2   28305.8   53011.8
+ -5.19568  -10.8218  -5.39667   12066.9   32513.8   4003.86
+ -9.00452  -12.9095  -8.70918    -18070   15716.6  -30781.9
+ -13.0319  -14.9717  -12.4899  -14262.7  -20624.6  -6223.61
+ -17.1882  -15.7396  -16.7542  -32698.4  -2226.71  -4205.84
+ -20.6528  -16.8298  -21.2321   15011.1  -49761.3   13898.5
+ -24.0653  -17.9317  -22.5535  -4679.68   153.766  -37704.5
+   -26.79  -18.1433  -23.8008  -4833.47   13634.9   23046.9
+ -27.6431  -18.7483  -24.9346  -4664.97  -4639.09  -75654.7
+ -27.4504  -18.9737  -25.9027   23539.2  -82813.6     48348
+ -25.4234  -18.4808  -23.2904  -19660.9  -7851.55  -11029.6
+ -21.7869  -18.4916  -18.9916   2726.91   -4894.5  -4267.58
+ -17.6943  -17.5817  -14.9665  -19322.8  -28492.6    721.03
+  -12.192  -15.5069   -10.275  -45631.5    -12256  -18412.2
+ -8.01436  -12.1971  -6.44417  -27564.6  -5331.87   16317.5
+ -5.01784  -7.97917   -3.5647   2174.05   62173.8     35394
+ -2.80831  -3.47113  -1.03235   23100.2  -24631.4  -7095.18
+        0         0         0         0         0         0

@@ -1,0 +1,54 @@
+********************************************************************************
+Field Output Report, written Mon Mar  7 17:10:10 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/beamjob.odb
+   Step: static beam
+   Frame: Increment      1: Step Time =    1.000
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: BEAM-1
+   Computation algorithm: EXTRAPOLATE_COMPUTE_AVERAGE
+   Averaged at nodes
+   Averaging regions: ODB_REGIONS
+
+       Node Label           SM.SM1
+                            @Loc 1
+-----------------------------------
+                1        847.61755
+                2   -3.4442178E+03
+                3   -4.4372168E+03
+                4    1.0314924E+03
+                5        361.42538
+                6       -608.01404
+                7   -1.5715635E+03
+                8   -2.5292231E+03
+                9   -4.2062222E+03
+               10   -4.7049121E+03
+               11   -4.9035117E+03
+               12   -4.8020215E+03
+               13   -3.9194214E+03
+               14   -3.3589614E+03
+               15   -2.7926118E+03
+               16   -2.2203723E+03
+               17   -1.6422424E+03
+               18   -1.0582228E+03
+               19       -468.31329
+               20        127.48592
+               21        729.17523
+
+
+  Minimum           -4.9035117E+03
+          At Node               11
+
+  Maximum            1.0314924E+03
+          At Node                4
+
+            Total   -43.569852E+03
+
+

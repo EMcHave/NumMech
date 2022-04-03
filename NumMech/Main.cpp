@@ -14,13 +14,13 @@ using namespace std;
 
 vector<MatrixXd> noAngles(MatrixXd&, MatrixXd&, MatrixXd&);
 
-/*
+
 int main(int argc, int argv)
 {
     float l = 2;
     int n = 20;
-    vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{n, 1, 0} };
-    vector<Force> forces{ Force{ 0, -98000, 0 } };
+    vector<Constraint> cons{ Constraint{0, 1, 1}, Constraint{n, 1, 0} };
+    vector<Force> forces{ Force{ 10, -98000, 0 } };
     BeamFEM* beam = new BeamFEM(l, n, cons, false, false, pair<int, int>{5, 9}, forces);
 
     vector<vector<VectorXd>> dynSol= beam->DynamicSolve();
@@ -30,8 +30,8 @@ int main(int argc, int argv)
 
     for (int i = 0; i <= n; i++)
     {
-        X.push_back(beam->nodes[i].x);
-        Xvec(i) = beam->nodes[i].x;
+        X.push_back(beam->nodes[i].x/2);
+        Xvec(i) = beam->nodes[i].x/2;
     }
         
     for (int i = 0; i < dynSol.at(0).at(0).size(); i += 2)
@@ -56,11 +56,10 @@ int main(int argc, int argv)
 
     VectorXd numbers = VectorXd::LinSpaced(n + 1, 1, n + 1);
 
-    cout << dynSol.at(0).at(250000).size() << endl;
 
-    U << dynSol.at(0).at(100000), dynSol.at(0).at(250000), dynSol.at(0).at(500000), dynSol.at(0).at(549600), dynSol.at(0).at(712000), dynSol.at(0).at(989800);
-    V << dynSol.at(1).at(99000), dynSol.at(1).at(249000), dynSol.at(1).at(499000), dynSol.at(1).at(550000), dynSol.at(1).at(700000), dynSol.at(1).at(990000);
-    A << dynSol.at(2).at(99000), dynSol.at(2).at(250500), dynSol.at(2).at(499990), dynSol.at(2).at(550000), dynSol.at(2).at(700000), dynSol.at(2).at(989500);
+    U << dynSol.at(0).at(100000), dynSol.at(0).at(250000), dynSol.at(0).at(500000), dynSol.at(0).at(550000), dynSol.at(0).at(700000), dynSol.at(0).at(990000);
+    V << dynSol.at(1).at(101000), dynSol.at(1).at(251000), dynSol.at(1).at(499800), dynSol.at(1).at(550000), dynSol.at(1).at(699000), dynSol.at(1).at(991000);
+    A << dynSol.at(2).at(100000), dynSol.at(2).at(250000), dynSol.at(2).at(500000), dynSol.at(2).at(550000), dynSol.at(2).at(700000), dynSol.at(2).at(989500);
 
     for (int i = 0; i < k; i++)
     {
@@ -76,28 +75,28 @@ int main(int argc, int argv)
 
     
     plt::figure(0);
-    plt::named_plot("t1 = 0,55 c", X, Y1, "r");
-    plt::named_plot("t2 = 0.7 c", X, Y2, "g");
-    plt::named_plot("t3 = 0.99 c", X, Y3, "b");
+    plt::named_plot("t1 = 0,1 c", X, Y1);
+    plt::named_plot("t2 = 0.25 c", X, Y2);
+    plt::named_plot("t3 = 0.5 c", X, Y3);
     plt::grid(true);
     plt::xlabel("X, m");
-    plt::ylabel("U, m");
-    plt::title("Displacements");
+    plt::ylabel("A, m/(s*s)");
+    plt::title("A");
     plt::legend();
     plt::show();
     
     delete beam;
 }
-*/
 
 
+/*
 int main()
 {
-    float l = 2;
-    int n = 20;
+    float l = 1;
+    int n = 12;
     vector<Constraint> cons{ Constraint{0, 1, 0}, Constraint{n, 1, 0} };
-    vector<Force> f{ Force{ 15, -98000, 0 } };
-    BeamFEM* beam = new BeamFEM(l, n, cons, false, false, pair<int, int>{0, 3}, f);
+    vector<Force> f{ Force{ 6, 0, 0 } };
+    BeamFEM* beam = new BeamFEM(l, n, cons, true, true, pair<int, int>{3, 5}, f);
     
     VectorXd disps = beam->StaticSolve();
     cout << disps << endl;
@@ -106,26 +105,32 @@ int main()
     vector<double> X;
     vector<double> Y;
     vector<double> Y1;
+    VectorXd Xvec(n + 1);
     for (int i = 0; i <= n; i++)
+    {
         X.push_back(beam->nodes[i].x);
+        Xvec(i) = beam->nodes[i].x;
+    }
+        
     for(int i = 0; i < disps.size(); i += 2 )
         Y.push_back(disps[i]);
     for (int i = 1; i < disps.size(); i += 2)
         Y1.push_back(disps[i]);
 
-
+    
     int k = beam->nodes.size();
 
-    ofstream displacements ("dispsC++.txt"), angles("anglesC++.txt"), forces("beamforcesC++.txt"), moments("beammomentsC++.txt");
+    ofstream displacements("dispsC++.txt"), angles("anglesC++.txt"), forces("beamforcesC++.txt"), moments("beammomentsC++.txt"), Xtable("X.txt");
 
     ofstream dispsComp("dispsComp.txt"), anglesComp("anglesComp.txt"), forcesComp("beamforcesComp.txt"), momentsComp("beammomentsComp.txt");
 
-    ifstream dispsAb("beamdispsBE.txt"), forcesAb("forcesbeam.txt");
+    ifstream dispsAb("beamdispsBE.txt"), forcesAb("beamforces.txt");
 
     VectorXd dispV(k), anglesV(k), forcesV(k), momentsV(k), dispsCompV(k), forcesCompV(k), momentsCompV(k), dispsAbV(k), anglesAbV(k), forcesAbV(k), momentsAbV(k);
 
     VectorXd numbers = VectorXd::LinSpaced(n+1, 1, n+1);
 
+    Xtable << Xvec;
 
 
     MatrixXd m(n+1, 3);
@@ -159,18 +164,19 @@ int main()
     forcesComp << -forcesV + forcesAbV;
     momentsComp << -momentsV + momentsAbV;
     
+
     plt::figure(0);
     plt::plot(X, Y);
     plt::xlabel("X, m");
-    plt::ylabel("Deflection, m");
-    plt::title("Bended beam");
+    plt::ylabel("displacement, m");
+    plt::title("Beam");
     plt::grid(true);
 
     plt::figure(1);
     plt::plot(plot[0].first, plot[0].second);
     plt::xlabel("X, m");
-    plt::ylabel("Deflection, m");
-    plt::title("Smooth bended beam");
+    plt::ylabel("Displacement, m");
+    plt::title("Smooth beam");
     plt::grid(true);
 
     plt::figure(2);
@@ -184,7 +190,7 @@ int main()
     plt::plot(plot[2].first, plot[2].second);
     plt::xlabel("X, m");
     plt::ylabel("Force, N");
-    plt::title("Shear force");
+    plt::title("Force");
     plt::grid(true);
     plt::show();
     
@@ -192,7 +198,7 @@ int main()
 
     return 0;
 }
-
+*/
 
 
 /*
