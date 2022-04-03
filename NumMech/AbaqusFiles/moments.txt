@@ -1,0 +1,52 @@
+********************************************************************************
+Field Output Report, written Sun Mar  6 18:07:37 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/beamjob.odb
+   Step: static beam
+   Frame: Increment      1: Step Time =    1.000
+
+Loc 1 : Integration point values from source 1
+
+Output sorted by column "Element Label".
+
+Field Output reported at integration points for part: BEAM-1
+
+   Element Label             Int          SM.SM1
+                              Pt          @Loc 1
+-------------------------------------------------
+               1               1         847.618
+               2               1        -124.767
+               3               1    -1.09126E+03
+               4               1    -2.05187E+03
+               5               1    -3.00658E+03
+               6               1    -3.88185E+03
+               7               1    -4.53059E+03
+               8               1    -4.87923E+03
+               9               1    -4.92779E+03
+              10               1    -4.67625E+03
+              11               1    -4.19818E+03
+              12               1    -3.64066E+03
+              13               1    -3.07726E+03
+              14               1    -2.50796E+03
+              15               1    -1.93278E+03
+              16               1    -1.35171E+03
+              17               1        -764.740
+              18               1        -171.886
+              19               1         426.858
+              20               1     1.03149E+03
+
+
+  Minimum                           -4.92779E+03
+      At Element                               9
+          Int Pt                               1
+
+  Maximum                            1.03149E+03
+      At Element                              20
+          Int Pt                               1
+
+           Total                    -44.5094E+03
+
+

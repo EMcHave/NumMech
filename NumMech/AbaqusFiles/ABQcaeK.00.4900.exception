@@ -1,0 +1,28 @@
+<Description>
+   ABAQUS/ABQcaeK rank 0 received the SIGABRT signal
+</Description>
+
+<Context>
+   UNKNOWN
+</Context>
+
+<Callstack>
+</Callstack>
+
+<Memory>
+   <Current>             170 MB </Current>
+   <Resident>            161 MB </Resident>
+   <Physical>          16303 MB </Physical>
+   <Limit>                 0 MB </Limit>
+   <Accessible>        16303 MB </Accessible>
+   <Allocator>            DL    </Allocator>
+</Memory>
+
+<Directories>
+  <current> C:\AbaqusFiles                 </current> 
+     <temp> C:\Users\mchav\AppData\Local\Temp </temp>
+</Directories>
+
+<Installation>
+</Installation>
+

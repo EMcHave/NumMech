@@ -1,0 +1,444 @@
+********************************************************************************
+Field Output Report, written Sun Apr  3 15:37:57 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   9890: Step Time =   0.9890
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            U.U2
+                          @Loc 1
+---------------------------------
+               1     675.909E-36
+               2    -2.03922E-03
+               3    -285.663E-36
+               4    -90.3798E-06
+               5    -280.743E-06
+               6    -538.766E-06
+               7    -833.195E-06
+               8    -1.13509E-03
+               9    -1.41906E-03
+              10    -1.66428E-03
+              11    -1.85517E-03
+              12    -1.98170E-03
+              13    -2.02791E-03
+              14    -1.95193E-03
+              15    -1.81832E-03
+              16    -1.63587E-03
+              17    -1.41404E-03
+              18    -1.16204E-03
+              19    -888.169E-06
+              20    -599.511E-06
+              21    -301.862E-06
+
+
+  Minimum           -2.03922E-03
+         At Node               2
+
+  Maximum            675.909E-36
+         At Node               1
+
+           Total    -23.6373E-03
+
+
+********************************************************************************
+Field Output Report, written Sun Apr  3 15:39:13 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   9890: Step Time =   0.9890
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            V.V2
+                          @Loc 1
+---------------------------------
+               1    -60.8927E-33
+               2        -11.8075
+               3     25.7354E-33
+               4    -347.570E-03
+               5        -1.14095
+               6        -2.28090
+               7        -3.66802
+               8        -5.20313
+               9        -6.78828
+              10        -8.32813
+              11        -9.73202
+              12        -10.9164
+              13        -12.3444
+              14        -12.4818
+              15        -12.1921
+              16        -11.4674
+              17        -10.3200
+              18        -8.78276
+              19        -6.90731
+              20        -4.76215
+              21        -2.42923
+
+
+  Minimum               -12.4818
+         At Node              14
+
+  Maximum            25.7354E-33
+         At Node               3
+
+           Total        -141.900
+
+
+********************************************************************************
+Field Output Report, written Sun Apr  3 15:40:31 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   9890: Step Time =   0.9890
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2     3.62934E+03
+               3              0.
+               4         441.761
+               5     1.27161E+03
+               6     2.29049E+03
+               7     3.31238E+03
+               8     4.17790E+03
+               9     4.76643E+03
+              10     5.00466E+03
+              11     4.87008E+03
+              12     4.38903E+03
+              13     2.68891E+03
+              14     1.68143E+03
+              15         721.359
+              16        -90.2748
+              17        -677.558
+              18        -997.740
+              19    -1.04497E+03
+              20        -849.552
+              21        -473.067
+
+
+  Minimum           -1.04497E+03
+         At Node              19
+
+  Maximum            5.00466E+03
+         At Node              10
+
+           Total     35.1122E+03
+
+
+********************************************************************************
+Field Output Report, written Sun Apr  3 16:38:08 2022
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment    980: Step Time =   9.8000E-02
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2        -22.4295
+               3              0.
+               4        -1.25604
+               5        -3.73879
+               6        -6.93435
+               7        -10.3764
+               8        -13.6842
+               9        -16.5878
+              10        -18.9335
+              11        -20.6698
+              12        -21.8171
+              13        -22.5583
+              14        -22.2254
+              15        -21.4132
+              16        -20.0717
+              17        -18.1394
+              18        -15.5726
+              19        -12.3737
+              20        -8.61025
+              21        -4.42013
+
+
+  Minimum               -22.5583
+         At Node              13
+
+  Maximum                     0.
+         At Node               3
+
+           Total        -281.812
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   2500: Step Time =   0.2500
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2        -11.5975
+               3              0.
+               4    -255.287E-03
+               5    -871.608E-03
+               6        -1.79011
+               7        -2.95290
+               8        -4.30247
+               9        -5.78005
+              10        -7.32288
+              11        -8.86120
+              12        -10.3158
+              13        -12.6092
+              14        -13.2516
+              15        -13.4318
+              16        -13.0745
+              17        -12.1332
+              18        -10.6005
+              19        -8.51491
+              20        -5.96198
+              21        -3.07010
+
+
+  Minimum               -13.4318
+         At Node              15
+
+  Maximum                     0.
+         At Node               3
+
+           Total        -146.698
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   4970: Step Time =   0.4970
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2        -23.6786
+               3              0.
+               4    -669.377E-03
+               5        -2.21182
+               6        -4.44214
+               7        -7.17380
+               8        -10.2187
+               9        -13.3881
+              10        -16.4949
+              11        -19.3573
+              12        -21.8035
+              13        -24.8505
+              14        -25.2173
+              15        -24.7130
+              16        -23.3122
+              17        -21.0331
+              18        -17.9380
+              19        -14.1312
+              20        -9.75439
+              21        -4.97948
+
+
+  Minimum               -25.2173
+         At Node              14
+
+  Maximum                     0.
+         At Node               3
+
+           Total        -285.368
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   5490: Step Time =   0.5490
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2     12.7557E+03
+               3              0.
+               4        -680.085
+               5    -1.56871E+03
+               6    -2.20193E+03
+               7    -2.19155E+03
+               8    -1.28855E+03
+               9         572.847
+              10     3.26208E+03
+              11     6.47540E+03
+              12     9.79236E+03
+              13     14.9589E+03
+              14     16.1219E+03
+              15     16.1389E+03
+              16     15.0850E+03
+              17     13.1814E+03
+              18     10.7266E+03
+              19     8.01642E+03
+              20     5.27196E+03
+              21     2.60082E+03
+
+
+  Minimum           -2.20193E+03
+         At Node               6
+
+  Maximum            16.1389E+03
+         At Node              15
+
+           Total     127.029E+03
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   7020: Step Time =   0.7020
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2    -15.2834E+03
+               3              0.
+               4        -866.075
+               5    -2.61750E+03
+               6    -4.91496E+03
+               7    -7.43656E+03
+               8    -9.89578E+03
+               9    -12.0576E+03
+              10    -13.7497E+03
+              11    -14.8676E+03
+              12    -15.3725E+03
+              13    -14.6639E+03
+              14    -13.6076E+03
+              15    -12.2214E+03
+              16    -10.6114E+03
+              17    -8.87149E+03
+              18    -7.07562E+03
+              19    -5.27389E+03
+              20    -3.49267E+03
+              21    -1.73778E+03
+
+
+  Minimum           -15.3725E+03
+         At Node              12
+
+  Maximum                     0.
+         At Node               3
+
+           Total    -174.617E+03
+
+
+Source 1
+---------
+
+   ODB: C:/AbaqusFiles/DynJobNikita.odb
+   Step: Step-1
+   Frame: Increment   9890: Step Time =   0.9890
+
+Loc 1 : Nodal values from source 1
+
+Output sorted by column "Node Label".
+
+Field Output reported at nodes for part: PART-1-1
+
+      Node Label            A.A2
+                          @Loc 1
+---------------------------------
+               1              0.
+               2     3.62934E+03
+               3              0.
+               4         441.761
+               5     1.27161E+03
+               6     2.29049E+03
+               7     3.31238E+03
+               8     4.17790E+03
+               9     4.76643E+03
+              10     5.00466E+03
+              11     4.87008E+03
+              12     4.38903E+03
+              13     2.68891E+03
+              14     1.68143E+03
+              15         721.359
+              16        -90.2748
+              17        -677.558
+              18        -997.740
+              19    -1.04497E+03
+              20        -849.552
+              21        -473.067
+
+
+  Minimum           -1.04497E+03
+         At Node              19
+
+  Maximum            5.00466E+03
+         At Node              10
+
+           Total     35.1122E+03
+
+
